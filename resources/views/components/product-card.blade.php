@@ -16,14 +16,16 @@
 
 <article class="product-card mbs-product-card group">
     <div class="product-image-wrap">
-        <a href="{{ route('shop') }}" class="product-image-link">
-            <img
-                src="{{ $image }}"
-                alt="{{ $product['image_alt'] ?? $name }}"
-                class="product-image"
-                loading="lazy"
-            >
-        </a>
+        <div class="product-image-inner">
+            <a href="{{ route('shop') }}" class="product-image-link">
+                <img
+                    src="{{ $image }}"
+                    alt="{{ $product['image_alt'] ?? $name }}"
+                    class="product-image"
+                    loading="lazy"
+                >
+            </a>
+        </div>
         @if ($badgeLabel)
             <span @class([
                 'product-badge',
@@ -39,7 +41,7 @@
             <button type="button" class="product-action-btn" aria-label="Wishlist">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10Z"/></svg>
             </button>
-            <button type="button" @click="cartOpen = true" class="product-action-btn product-action-btn--cart" aria-label="Add to cart">
+            <button type="button" @click="cartOpen = true" class="product-action-btn cart-active" aria-label="Add to cart">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M6 7h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
             </button>
             <button type="button" class="product-action-btn" aria-label="Compare">

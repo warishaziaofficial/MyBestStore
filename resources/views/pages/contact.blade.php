@@ -55,9 +55,36 @@
 
 <section class="mbs-page-section">
     <div class="mbs-container">
+        @include('components.section-header', [
+            'title' => $contactMap['title'] ?? 'Find Us on the Map',
+            'subtitle' => $contactMap['subtitle'] ?? 'Plan your visit or get directions to our store',
+        ])
         <div class="mbs-map-card">
-            <div class="mbs-map-placeholder">Map placeholder — connect Google Maps via CMS later</div>
+            @if (!empty($contactMap['embed_url']))
+                <iframe
+                    class="mbs-map-embed"
+                    src="{{ $contactMap['embed_url'] }}"
+                    allowfullscreen
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="MyBestStore location on Google Maps"
+                ></iframe>
+            @else
+                <div class="mbs-map-placeholder">Map placeholder — connect Google Maps via CMS later</div>
+            @endif
         </div>
+        @if (!empty($contactMap['address']) || !empty($contactMap['maps_link']))
+            <div class="mbs-map-footer">
+                @if (!empty($contactMap['address']))
+                    <p class="mbs-map-address">{{ $contactMap['address'] }}</p>
+                @endif
+                @if (!empty($contactMap['maps_link']))
+                    <a href="{{ $contactMap['maps_link'] }}" target="_blank" rel="noopener noreferrer" class="mbs-map-link">
+                        Open in Google Maps →
+                    </a>
+                @endif
+            </div>
+        @endif
         <div class="mt-6 flex flex-wrap gap-4">
             <a href="{{ route('shop') }}" class="mbs-section-link">Browse Shop →</a>
             <a href="{{ route('blog') }}" class="mbs-section-link">Read Guides →</a>

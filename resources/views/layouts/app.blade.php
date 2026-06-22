@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'MyBestStore | Premium Electronics')</title>
     <meta name="description" content="@yield('meta_description', 'MyBestStore — premium electronics and home entertainment in Pakistan.')">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,21 +17,21 @@
                 extend: {
                     colors: {
                         background: '#ffffff',
-                        foreground: '#1e293b',
+                        foreground: '#082B4F',
                         primary: {
-                            DEFAULT: '#1b4f9b',
-                            hover: '#164080',
-                            light: '#e8f0fb',
+                            DEFAULT: '#005AA7',
+                            hover: '#003B73',
+                            light: '#EAF4FF',
                         },
                         accent: {
-                            DEFAULT: '#2eaf5e',
-                            light: '#e8f5ee',
+                            DEFAULT: '#36B44A',
+                            light: '#E8F8EB',
                         },
-                        secondary: '#f8fafc',
+                        secondary: '#F5FAFF',
                         card: '#ffffff',
-                        muted: '#64748b',
-                        border: '#e2e8f0',
-                        navy: '#0f2744',
+                        muted: '#60758C',
+                        border: '#CFE3F8',
+                        navy: '#082B4F',
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
@@ -42,23 +43,43 @@
             }
         }
     </script>
+    <script>
+        window.__MBS__ = {
+            cartCount: {{ $cartCount ?? 0 }},
+            wishlistSlugs: @json($wishlistSlugs ?? []),
+            compareSlugs: @json($compareSlugs ?? []),
+            openCart: {{ session('open_cart') ? 'true' : 'false' }},
+            customer: @json($authCustomer ?? null),
+            authUrls: {
+                login: @json(route('customer.login')),
+                register: @json(route('customer.register')),
+                forgotPassword: @json(route('customer.forgot-password')),
+                trackOrder: @json(route('customer.track-order')),
+                logout: @json(route('customer.logout')),
+            },
+        };
+    </script>
+    <script src="{{ asset('assets/js/mbs-storefront.js') }}?v={{ filemtime(public_path('assets/js/mbs-storefront.js')) }}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}?v={{ filemtime(public_path('assets/css/app.css')) }}">
 </head>
-<body
-    class="min-h-full bg-background font-sans text-foreground antialiased"
-    x-data="{
-        searchOpen: false,
-        loginOpen: false,
-        cartOpen: false,
-        quickViewOpen: false,
-        quickViewTitle: '',
-        quickViewImage: '',
-        filterOpen: false,
-        mobileNavOpen: false,
-        openDropdown: null
-    }"
->
+<body class="min-h-full bg-background font-sans text-foreground antialiased" x-data="mbsStorefront()">
+    <div
+        x-show="toastVisible"
+        x-cloak
+        x-transition
+        class="mbs-toast"
+        role="status"
+        aria-live="polite"
+        x-text="toastMessage"
+    ></div>
+    @if (session('success'))
+        <div class="mbs-flash mbs-flash--success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="mbs-flash mbs-flash--error">{{ session('error') }}</div>
+    @endif
+
     @include('components.header')
 
     <main class="flex-1">
@@ -71,5 +92,6 @@
     @include('components.sign-in-modal')
     @include('components.cart-drawer')
     @include('components.quick-view-modal')
+    @include('components.newsletter-popup')
 </body>
 </html>

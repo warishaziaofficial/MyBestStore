@@ -41,6 +41,15 @@ class Mbs
         return $url . ($item['hash'] ?? '');
     }
 
+    public static function shopCategoryUrl(?string $slug): string
+    {
+        if (empty($slug)) {
+            return route('shop');
+        }
+
+        return route('shop', ['category' => $slug]);
+    }
+
     public static function paginate(array $items, int $perPage = 12, string $pageName = 'page'): LengthAwarePaginator
     {
         $page = Paginator::resolveCurrentPage($pageName);

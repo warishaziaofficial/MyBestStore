@@ -2,40 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Support\Mbs;
+use App\Services\ProductCatalogService;
 use App\Support\StorefrontData;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 
 class StorefrontController extends Controller
 {
+    public function __construct(
+        private readonly ProductCatalogService $catalog,
+    ) {}
+
     public function home(): View
     {
         return view('pages.home', StorefrontData::home());
     }
 
-    public function shop(): View
+    public function shop(Request $request): View
     {
-        $data = StorefrontData::shared();
-        $data['products'] = Mbs::paginate($data['products']);
+        $catalog = $this->catalog->browse($request, 'shop');
 
-        return view('pages.shop', $data);
+        return view('pages.shop', array_merge(StorefrontData::shared(), $catalog, [
+            'showNewArrivalsFilter' => true,
+            'showFeaturedFilter' => true,
+        ]));
     }
 
-    public function categories(): View
+    public function categories(Request $request): View
     {
-        $data = StorefrontData::shared();
-        $data['exploreCategories'] = StorefrontData::exploreCategories();
-        $data['popularProducts'] = array_slice(StorefrontData::bestSelling(), 0, 8);
+        $catalog = $this->catalog->browse($request, 'categories');
 
-        return view('pages.categories', $data);
+        return view('pages.categories', array_merge(StorefrontData::shared(), $catalog, [
+            'exploreCategories' => StorefrontData::exploreCategories(),
+            'showNewArrivalsFilter' => false,
+            'showFeaturedFilter' => true,
+        ]));
     }
 
-    public function newArrivals(): View
+    public function newArrivals(Request $request): View
     {
-        $data = StorefrontData::shared();
-        $data['products'] = Mbs::paginate(StorefrontData::newArrivals());
+        $catalog = $this->catalog->browse($request, 'new-arrivals');
 
-        return view('pages.new-arrivals', $data);
+        return view('pages.new-arrivals', array_merge(StorefrontData::shared(), $catalog, [
+            'showNewArrivalsFilter' => false,
+            'showFeaturedFilter' => true,
+        ]));
     }
 
     public function blog(): View

@@ -4,51 +4,75 @@ return [
     'navigation' => [
         ['label' => 'Home', 'href' => 'home', 'route' => true],
         ['label' => 'Shop', 'href' => 'shop', 'route' => true, 'mega' => true],
-        ['label' => 'Deals', 'href' => 'shop', 'route' => true, 'hash' => '#deals'],
         ['label' => 'New Arrivals', 'href' => 'new-arrivals', 'route' => true],
         ['label' => 'Categories', 'href' => 'categories', 'route' => true],
         ['label' => 'Blog', 'href' => 'blog', 'route' => true],
         ['label' => 'Contact', 'href' => 'contact', 'route' => true],
     ],
 
-    'mega_menu' => [
+    'premium_categories' => [
         [
-            'title' => 'Electronics',
+            'title' => 'Premium TVs',
+            'image' => 'images/categories/led-tvs.jpg',
+            'href' => 'shop',
+            'route' => true,
             'links' => [
-                ['label' => 'LED TVs', 'href' => 'shop', 'route' => true],
-                ['label' => 'Home Theater', 'href' => 'shop', 'route' => true],
-                ['label' => 'Audio Equipment', 'href' => 'shop', 'route' => true],
-                ['label' => 'Smart Gadgets', 'href' => 'shop', 'route' => true],
+                ['label' => 'Samsung Neo QLED 4K Smart TV', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smart-tv.jpg'],
+                ['label' => 'LG OLED evo Smart TV', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smart-tv.jpg'],
+                ['label' => 'Sony Bravia 4K Google TV', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smart-tv.jpg'],
             ],
         ],
         [
-            'title' => 'Audio & Speakers',
+            'title' => 'Premium Audio',
+            'image' => 'images/categories/sound-bars.jpg',
+            'href' => 'shop',
+            'route' => true,
             'links' => [
-                ['label' => 'Sound Bars', 'href' => 'shop', 'route' => true],
-                ['label' => 'Bluetooth Speakers', 'href' => 'shop', 'route' => true],
-                ['label' => 'Home Audio', 'href' => 'shop', 'route' => true],
-                ['label' => 'Accessories', 'href' => 'shop', 'route' => true],
+                ['label' => 'Samsung Dolby Atmos Soundbar', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/soundbar.jpg'],
+                ['label' => 'Sony Wireless Noise Cancelling Headphones', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/headphones.jpg'],
+                ['label' => 'JBL PartyBox Speaker', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/speaker.jpg'],
+                ['label' => 'Bose Bluetooth Speaker', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/speaker.jpg'],
             ],
         ],
         [
-            'title' => 'Home Appliances',
+            'title' => 'Smart Home',
+            'image' => 'images/categories/air-purifiers.jpg',
+            'href' => 'shop',
+            'route' => true,
             'links' => [
-                ['label' => 'Air Purifiers', 'href' => 'shop', 'route' => true],
-                ['label' => 'Kitchen Appliances', 'href' => 'shop', 'route' => true],
-                ['label' => 'TV Stands', 'href' => 'shop', 'route' => true],
-                ['label' => 'Mobile Accessories', 'href' => 'shop', 'route' => true],
+                ['label' => 'Smart Air Purifier', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/air-purifier.jpg'],
+                ['label' => 'Robot Vacuum Cleaner', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/home-theater.jpg'],
+                ['label' => 'Smart Door Lock', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smartwatch.jpg'],
+                ['label' => 'Smart Security Camera', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/camera.jpg'],
             ],
         ],
         [
-            'title' => 'Customer Support',
+            'title' => 'Gaming & Tech',
+            'image' => 'assets/images/feature-carousel/computer.jpg',
+            'href' => 'shop',
+            'route' => true,
             'links' => [
-                ['label' => 'Contact Us', 'href' => 'contact', 'route' => true],
-                ['label' => 'Warranty', 'href' => 'contact', 'route' => true],
-                ['label' => 'Returns & Exchanges', 'href' => 'contact', 'route' => true],
-                ['label' => 'FAQs', 'href' => 'home', 'route' => true, 'hash' => '#faq'],
+                ['label' => 'Gaming Headset', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/headphones.jpg'],
+                ['label' => 'Gaming Monitor', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/computer.jpg'],
+                ['label' => 'Wireless Gaming Controller', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/accessories.jpg'],
+                ['label' => 'Mechanical Keyboard', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/computer.jpg'],
+            ],
+        ],
+        [
+            'title' => 'Accessories',
+            'image' => 'images/categories/accessories.jpg',
+            'href' => 'shop',
+            'route' => true,
+            'links' => [
+                ['label' => 'Type-C Fast Charger', 'href' => 'shop', 'route' => true, 'image' => 'images/categories/mobile-accessories.jpg'],
+                ['label' => 'Wireless Charging Pad', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/accessories.jpg'],
+                ['label' => 'Power Bank', 'href' => 'shop', 'route' => true, 'image' => 'images/categories/mobile-accessories.jpg'],
+                ['label' => 'Smartwatch', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smartwatch.jpg'],
             ],
         ],
     ],
+
+    'mega_menu' => [],
 
     'category_strip' => [
         ['label' => 'Electronics', 'icon' => '📺', 'href' => 'categories'],
@@ -115,33 +139,41 @@ return [
 
     'featured_collections' => [
         [
-            'title' => 'Home Entertainment',
-            'subtitle' => 'TVs, sound bars & theater systems',
-            'image' => 'banners/home-entertainment.jpg',
-            'href' => 'shop',
+            'title' => 'Home Entertainment Setup',
+            'image' => 'banners/audio-entertainment.jpg',
+            'category' => 'home-theater',
         ],
         [
-            'title' => 'Smart Home',
-            'subtitle' => 'Purifiers, gadgets & accessories',
+            'title' => 'Smart Home Essentials',
             'image' => 'banners/smart-home.jpg',
-            'href' => 'shop',
+            'category' => 'air-purifiers',
+        ],
+        [
+            'title' => 'Premium Audio Collection',
+            'image' => 'assets/images/offers/offer-headphones.jpg',
+            'category' => 'sound-bars',
+        ],
+        [
+            'title' => 'Work & Gaming Accessories',
+            'image' => 'assets/images/feature-carousel/accessories.jpg',
+            'category' => 'accessories',
         ],
     ],
 
     'category_banners' => [
-        ['title' => 'LED TVs', 'image' => 'images/categories/led-tvs.jpg', 'href' => 'shop'],
-        ['title' => 'Sound Bars', 'image' => 'images/categories/sound-bars.jpg', 'href' => 'shop'],
-        ['title' => 'Air Purifiers', 'image' => 'images/categories/air-purifiers.jpg', 'href' => 'shop'],
+        ['title' => 'LED TVs', 'image' => 'images/categories/led-tvs.jpg', 'href' => 'shop', 'slug' => 'led-tvs', 'subtitle' => '4K, QLED & Smart TVs for every room'],
+        ['title' => 'Sound Bars', 'image' => 'images/categories/sound-bars.jpg', 'href' => 'shop', 'slug' => 'sound-bars', 'subtitle' => 'Premium audio for home entertainment'],
+        ['title' => 'Air Purifiers', 'image' => 'images/categories/air-purifiers.jpg', 'href' => 'shop', 'slug' => 'air-purifiers', 'subtitle' => 'Cleaner air for healthier living'],
     ],
 
     'brands' => [
-        ['id' => 'samsung', 'name' => 'Samsung'],
-        ['id' => 'tcl', 'name' => 'TCL'],
-        ['id' => 'sony', 'name' => 'Sony'],
-        ['id' => 'panasonic', 'name' => 'Panasonic'],
-        ['id' => 'sharp', 'name' => 'Sharp'],
-        ['id' => 'pioneer', 'name' => 'Pioneer'],
-        ['id' => 'denon', 'name' => 'Denon'],
+        ['id' => 'samsung', 'name' => 'Samsung', 'logo' => 'assets/images/brands/samsung.svg'],
+        ['id' => 'tcl', 'name' => 'TCL', 'logo' => 'assets/images/brands/tcl.svg'],
+        ['id' => 'sony', 'name' => 'Sony', 'logo' => 'assets/images/brands/sony.svg'],
+        ['id' => 'panasonic', 'name' => 'Panasonic', 'logo' => 'assets/images/brands/panasonic.svg'],
+        ['id' => 'sharp', 'name' => 'Sharp', 'logo' => 'assets/images/brands/sharp.svg'],
+        ['id' => 'pioneer', 'name' => 'Pioneer', 'logo' => 'assets/images/brands/pioneer.svg'],
+        ['id' => 'denon', 'name' => 'Denon', 'logo' => 'assets/images/brands/denon.svg'],
     ],
 
     'ai_features' => [
@@ -151,22 +183,37 @@ return [
     ],
 
     'reviews' => [
-        ['name' => 'Ahmed K.', 'rating' => 5, 'text' => 'Excellent service and genuine products. My Samsung TV arrived perfectly packed.'],
-        ['name' => 'Sara M.', 'rating' => 5, 'text' => 'Delivery was quick and packaging was secure. Sound bar setup was easy.'],
-        ['name' => 'Hassan R.', 'rating' => 5, 'text' => 'Support team guided me to the right air purifier model for my home.'],
+        ['name' => 'Ahmed K.', 'rating' => 5, 'text' => 'Excellent service and genuine products. My Samsung TV arrived perfectly packed and on time.', 'purchase' => 'Samsung LED TV', 'avatar' => 'assets/images/testimonials/ahmed-k.jpg'],
+        ['name' => 'Sara M.', 'rating' => 5, 'text' => 'Delivery was quick and the packaging was secure. The sound bar setup was very easy.', 'purchase' => 'Sound Bar', 'avatar' => 'assets/images/testimonials/sara-m.jpg'],
+        ['name' => 'Hassan R.', 'rating' => 5, 'text' => 'Support team helped me choose the right air purifier for my home. Very satisfied.', 'purchase' => 'Air Purifier', 'avatar' => 'assets/images/testimonials/hassan-r.jpg'],
+        ['name' => 'Zain A.', 'rating' => 5, 'text' => 'Prices were fair and checkout was smooth. I will definitely order again.', 'purchase' => 'Home Electronics', 'avatar' => 'assets/images/testimonials/zain-a.jpg'],
     ],
 
     'faqs' => [
-        ['q' => 'How long is delivery?', 'a' => 'Usually 2–5 business days nationwide across Pakistan.'],
-        ['q' => 'Are products original?', 'a' => 'Yes, all products are 100% genuine with official manufacturer warranty.'],
-        ['q' => 'What payment methods do you accept?', 'a' => 'Cash on delivery, bank transfer and secure card payments.'],
-        ['q' => 'Can I return a product?', 'a' => 'Unused items in original packaging can be returned within 7 days per our policy.'],
+        ['q' => 'Which products do you sell?', 'a' => 'We sell electronics, audio products, home appliances, accessories, books and media products.'],
+        ['q' => 'How can I follow my order?', 'a' => 'You can track your order from the Track Order option or by contacting our support team.'],
+        ['q' => 'How can I choose the right product?', 'a' => 'You can compare product details, check ratings, or use our shopping help section for recommendations.'],
+        ['q' => 'Do you provide payment options?', 'a' => 'Yes, we support Cash on Delivery, Bank Transfer, JazzCash, EasyPaisa and card payment options.'],
+        ['q' => 'Can I return or exchange a product?', 'a' => 'Yes, eligible products can be returned or exchanged according to our return policy.'],
+        ['q' => 'How to redeem a discount code?', 'a' => 'Enter your discount code on the cart or checkout page and click Apply.'],
     ],
 
     'contact_cards' => [
         ['title' => 'Customer Support', 'value' => '+92 300 1234567', 'description' => 'Mon–Sat, 10am–8pm'],
         ['title' => 'Orders & Delivery', 'value' => 'orders@mybeststore.pk', 'description' => 'Track orders and shipping updates'],
         ['title' => 'Business Inquiries', 'value' => 'business@mybeststore.pk', 'description' => 'Wholesale and corporate sales'],
+    ],
+
+    /*
+    | Contact page map — replace embed_url via CMS when ready.
+    | Get embed URL from Google Maps → Share → Embed a map.
+    */
+    'contact_map' => [
+        'title' => 'Find Us on the Map',
+        'subtitle' => 'Plan your visit or get directions to our store',
+        'address' => 'Karachi, Sindh, Pakistan',
+        'embed_url' => 'https://maps.google.com/maps?q=Karachi,+Sindh,+Pakistan&hl=en&z=13&output=embed',
+        'maps_link' => 'https://www.google.com/maps/search/?api=1&query=Karachi,+Sindh,+Pakistan',
     ],
 
     'category_images' => [

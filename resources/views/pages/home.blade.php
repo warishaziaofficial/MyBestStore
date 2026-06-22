@@ -4,54 +4,224 @@
 @section('title', 'MyBestStore | Premium Electronics')
 
 @section('content')
-@include('components.hero-slider', ['slides' => $heroSlides])
-@include('components.category-strip')
+@include('components.hero-grid')
 
-{{-- Special Offers --}}
-<section class="home-section mbs-promo-section bg-white">
+{{-- Shop by brand --}}
+<section class="home-section bg-gradient-to-b from-primary-light/50 to-white">
     <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Special Offers', 'subtitle' => 'Limited-time deals on top electronics'])
-        <div class="home-section-inner mbs-promo-banners">
-            <a href="{{ route('shop') }}" class="mbs-promo-banner">
-                <img src="{{ asset('banners/home-entertainment.jpg') }}" alt="Built-in Voice Assistants" class="mbs-promo-banner-bg">
-                <div class="mbs-promo-banner-overlay"></div>
-                <div class="mbs-promo-banner-content">
-                    <span class="mbs-promo-banner-label">SMART Series</span>
-                    <h3 class="mbs-promo-banner-title">Built-in Voice Assistants</h3>
-                    <span class="mbs-promo-banner-btn">Shop Now</span>
-                </div>
-            </a>
-            <a href="{{ route('shop') }}" class="mbs-promo-banner">
-                <img src="{{ asset('banners/audio-collection.jpg') }}" alt="Advanced Technology" class="mbs-promo-banner-bg">
-                <div class="mbs-promo-banner-overlay"></div>
-                <div class="mbs-promo-banner-content">
-                    <span class="mbs-promo-banner-label">High-Resolution</span>
-                    <h3 class="mbs-promo-banner-title">Advanced Technology</h3>
-                    <span class="mbs-promo-banner-btn">Shop Now</span>
-                </div>
-            </a>
+        @include('components.section-header', ['title' => 'Shop By Brand', 'subtitle' => 'Explore products from trusted brands', 'viewAllHref' => route('categories')])
+        <div class="home-section-inner grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+            @foreach ($brands as $brand)
+                <a href="{{ route('shop') }}" class="mbs-brand-card" title="{{ $brand['name'] }}">
+                    <img
+                        src="{{ Mbs::image($brand['logo'] ?? '') }}"
+                        alt="{{ $brand['name'] }}"
+                        class="mbs-brand-card-logo{{ in_array($brand['id'], ['samsung', 'sony', 'panasonic', 'denon'], true) ? ' mbs-brand-card-logo--lg' : '' }}"
+                        loading="lazy"
+                    >
+                </a>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- Special Offers — premium deals carousel --}}
+@php
+    $dealsSlides = [
+        [
+            'left' => [
+                'title' => 'Wireless Gaming Headset',
+                'price' => 18000,
+                'old_price' => 25000,
+                'image' => 'assets/images/offers/offer-headphones.jpg',
+                'alt' => 'Wireless gaming headset premium audio',
+            ],
+            'right' => [
+                'title' => 'Premium Audio Accessories',
+                'price' => 55000,
+                'old_price' => 68000,
+                'image' => 'assets/images/offers/offer-accessories.jpg',
+                'alt' => 'Premium audio accessories bundle',
+            ],
+        ],
+        [
+            'left' => [
+                'title' => 'True Wireless Earbuds Pro',
+                'price' => 8500,
+                'old_price' => 12000,
+                'image' => 'assets/images/offers/offer-earbuds-pro.jpg',
+                'alt' => 'True wireless earbuds pro',
+            ],
+            'right' => [
+                'title' => 'JBL Bluetooth Speaker',
+                'price' => 72000,
+                'old_price' => 89000,
+                'image' => 'assets/images/offers/offer-speaker-jbl.jpg',
+                'alt' => 'JBL premium bluetooth speaker',
+            ],
+        ],
+        [
+            'left' => [
+                'title' => 'Samsung 4K QLED Smart TV',
+                'price' => 189000,
+                'old_price' => 225000,
+                'image' => 'assets/images/offers/offer-smart-tv.jpg',
+                'alt' => 'Samsung 4K QLED smart television',
+            ],
+            'right' => [
+                'title' => 'Smart Air Purifier Pro',
+                'price' => 42000,
+                'old_price' => 52000,
+                'image' => 'assets/images/offers/offer-air-purifier.jpg',
+                'alt' => 'Smart air purifier for home',
+            ],
+        ],
+    ];
+@endphp
+<section
+    id="deals"
+    class="home-section bg-white deals-showcase special-offers"
+    x-data="{
+        activeSlide: 0,
+        totalSlides: {{ count($dealsSlides) }},
+        timer: null,
+        isPaused: false,
+        init() { this.play(); },
+        play() {
+            clearInterval(this.timer);
+            if (this.isPaused) return;
+            this.timer = setInterval(() => this.next(true), 4500);
+        },
+        pause() {
+            this.isPaused = true;
+            clearInterval(this.timer);
+        },
+        resume() {
+            this.isPaused = false;
+            this.play();
+        },
+        next(fromTimer = false) {
+            this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
+            if (!fromTimer) this.play();
+        },
+        prev() {
+            this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
+            this.play();
+        }
+    }"
+    x-init="init()"
+    @mouseenter="pause()"
+    @mouseleave="resume()"
+>
+    <div class="mbs-container">
+        <div class="deals-showcase-header special-offers-header">
+            <div class="deals-icon-badge special-offers-icon" aria-hidden="true">
+                <svg class="deals-icon-badge-svg special-offers-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M7 7h.01"/>
+                </svg>
+            </div>
+            <div class="deals-showcase-heading">
+                <h2 class="deals-showcase-title">Special Offers</h2>
+                <p class="deals-showcase-subtitle">Premium earbuds, headphones, speakers and electronics accessories at exclusive prices.</p>
+            </div>
+            <div class="deals-showcase-nav">
+                <button type="button" class="deals-nav-btn" aria-label="Previous deals" @click="prev()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button type="button" class="deals-nav-btn" aria-label="Next deals" @click="next()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="deals-carousel" aria-live="polite">
+            <div class="deals-carousel-track" :style="`transform: translateX(-${activeSlide * 100}%)`">
+                @foreach ($dealsSlides as $slide)
+                    <div class="deals-slide">
+                        <div class="deals-banner-grid">
+                            <a href="{{ route('shop') }}" class="deals-banner offer-banner">
+                                <img
+                                    src="{{ asset($slide['left']['image']) }}"
+                                    alt="{{ $slide['left']['alt'] }}"
+                                    class="deals-banner-bg offer-banner-image"
+                                    loading="lazy"
+                                >
+                                <div class="deals-banner-overlay offer-banner-overlay"></div>
+                                <div class="deals-banner-content offer-banner-content">
+                                    <h3 class="deals-banner-title">{{ $slide['left']['title'] }}</h3>
+                                    <div class="deals-banner-prices">
+                                        <span class="deals-banner-price">{{ Mbs::price($slide['left']['price']) }}</span>
+                                        <span class="deals-banner-price-old">{{ Mbs::price($slide['left']['old_price']) }}</span>
+                                    </div>
+                                    <span class="deals-banner-btn">Shop Now</span>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('shop') }}" class="deals-banner deals-banner-large offer-banner offer-banner--large">
+                                <img
+                                    src="{{ asset($slide['right']['image']) }}"
+                                    alt="{{ $slide['right']['alt'] }}"
+                                    class="deals-banner-bg offer-banner-image"
+                                    loading="lazy"
+                                >
+                                <div class="deals-banner-overlay offer-banner-overlay"></div>
+                                <div class="deals-banner-content offer-banner-content">
+                                    <h3 class="deals-banner-title">{{ $slide['right']['title'] }}</h3>
+                                    <div class="deals-banner-prices">
+                                        <span class="deals-banner-price">{{ Mbs::price($slide['right']['price']) }}</span>
+                                        <span class="deals-banner-price-old">{{ Mbs::price($slide['right']['old_price']) }}</span>
+                                    </div>
+                                    <span class="deals-banner-btn">Shop Now</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- Featured Collections --}}
+<section class="home-section featured-collections-strip">
+    <div class="mbs-container">
+        <div class="featured-collections-strip-inner">
+            <aside class="featured-collections-promo-panel">
+                <h2 class="featured-collections-promo-title">Curated Collections</h2>
+                <p class="featured-collections-promo-desc">Premium product picks designed for every lifestyle.</p>
+                <a href="{{ route('shop') }}" class="featured-collections-promo-btn">Explore All</a>
+            </aside>
+            <div class="featured-collections-items">
+                @foreach ($featuredCollections as $collection)
+                    <a href="{{ !empty($collection['category']) ? Mbs::shopCategoryUrl($collection['category']) : route($collection['href'] ?? 'shop') }}" class="featured-collection-tile">
+                        <div class="featured-collection-image-wrap">
+                            <img
+                                src="{{ Mbs::image($collection['image']) }}"
+                                alt="{{ $collection['title'] }}"
+                                class="featured-collection-image"
+                                loading="lazy"
+                            >
+                        </div>
+                        <div class="featured-collection-info">
+                            <h3 class="featured-collection-name">{{ $collection['title'] }}</h3>
+                            @if (!empty($collection['price']))
+                                <p class="featured-collection-price">{{ Mbs::price((int) $collection['price']) }}</p>
+                            @endif
+                        </div>
+                    </a>
+                @endforeach
+            </div>
         </div>
     </div>
 </section>
 
 {{-- Shop By Category --}}
-@php
-    $shopCategories = [
-        ['name' => 'Ear Buds', 'image' => 'images/categories/mobile-accessories.jpg'],
-        ['name' => 'Head Phone', 'image' => 'images/categories/audio-equipment.jpg'],
-        ['name' => 'Sound Bar Speakers', 'image' => 'images/categories/sound-bars.jpg'],
-        ['name' => 'Amplifier Woofer', 'image' => 'products/showcase-soundbar.jpg'],
-        ['name' => 'LED TVs', 'image' => 'images/categories/led-tvs.jpg'],
-        ['name' => 'Air Purifiers', 'image' => 'images/categories/air-purifiers.jpg'],
-        ['name' => 'Home Theater', 'image' => 'images/categories/home-theater.jpg'],
-        ['name' => 'Accessories', 'image' => 'images/categories/accessories.jpg'],
-    ];
-@endphp
 <section class="home-section mbs-shop-category-section">
     <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Shop By Category', 'subtitle' => 'Browse our most popular collections', 'viewAllHref' => route('categories')])
+        @include('components.section-header', ['title' => 'Premium Product Categories', 'subtitle' => 'Browse premium TVs, audio, smart home, gaming and accessories', 'viewAllHref' => route('categories')])
         <div class="home-section-inner mbs-shop-category-grid">
-            @foreach ($shopCategories as $category)
+            @foreach (array_slice($premiumCategories, 0, 4) as $category)
                 @include('components.shop-category-tile', ['category' => $category])
             @endforeach
         </div>
@@ -59,159 +229,197 @@
 </section>
 
 @include('components.product-grid-section', ['title' => 'Best Selling Products', 'subtitle' => 'Top picks loved by customers', 'products' => array_slice($bestSelling, 0, 4), 'viewAllHref' => route('shop'), 'bg' => 'bg-white'])
-@include('components.product-grid-section', ['title' => 'New Arrivals', 'subtitle' => 'Recently added to MyBestStore', 'products' => array_slice($newArrivals, 0, 6), 'viewAllHref' => route('new-arrivals'), 'bg' => 'bg-secondary', 'grid' => '3'])
-@include('components.product-grid-section', ['title' => 'LED TVs', 'products' => $ledTvs, 'viewAllHref' => route('shop'), 'bg' => 'bg-white'])
-@include('components.product-grid-section', ['title' => 'Sound Bars', 'products' => $soundBars, 'viewAllHref' => route('shop'), 'bg' => 'bg-secondary'])
-@include('components.product-grid-section', ['title' => 'Air Purifiers', 'products' => $airPurifiers, 'viewAllHref' => route('shop'), 'bg' => 'bg-white'])
-@include('components.product-grid-section', ['title' => 'Home Theater', 'products' => $homeTheater, 'viewAllHref' => route('shop'), 'bg' => 'bg-secondary'])
+@include('components.product-grid-section', ['title' => 'New Arrivals', 'subtitle' => 'Recently added to MyBestStore', 'products' => array_slice($newArrivals, 0, 4), 'viewAllHref' => route('new-arrivals'), 'bg' => 'bg-secondary'])
 
-{{-- Exclusive Deals --}}
-<section id="deals" class="home-section bg-white">
+{{-- Trust strip --}}
+<section class="trust-strip" aria-label="Why shop with MyBestStore">
     <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Exclusive Electronics Deals', 'subtitle' => 'Hand-picked offers you cannot miss'])
-        <div class="home-section-inner grid gap-6 lg:grid-cols-[35%_1fr]">
-            <a href="{{ route('shop') }}" class="mbs-deals-banner group">
-                <img src="{{ Mbs::image('banners/featured-deal.jpg') }}" alt="Featured deal">
-                <div class="absolute inset-0 bg-navy/50"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <p class="text-xs font-bold uppercase tracking-widest text-blue-200">Featured Deal</p>
-                    <h3 class="mt-2 text-2xl font-bold">Save Big On Premium Audio</h3>
-                </div>
-            </a>
-            <div class="grid gap-5 sm:grid-cols-2">
-                @foreach (array_slice($dealProducts, 0, 4) as $product)
-                    @include('components.product-card', ['product' => $product])
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- Trust bar --}}
-<section class="home-section mbs-trust-section">
-    <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Why Shop With MyBestStore', 'subtitle' => 'Trusted by customers across Pakistan', 'centered' => true])
-        <div class="home-section-inner grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="trust-strip-grid">
+            @php
+                $trustItems = [
+                    ['title' => 'Free Shipping', 'desc' => 'Free delivery on selected orders', 'icon' => 'ship'],
+                    ['title' => '100% Secure Payment', 'desc' => 'Safe and encrypted checkout', 'icon' => 'shield'],
+                    ['title' => '24/7 Customer Support', 'desc' => 'Expert help whenever you need it', 'icon' => 'support'],
+                    ['title' => 'Free & Easy Returns', 'desc' => 'Hassle-free product returns', 'icon' => 'return'],
+                ];
+            @endphp
             @foreach ($trustItems as $item)
-                <div class="mbs-trust-card">
-                    <div class="mbs-trust-icon">{{ $item['icon'] }}</div>
-                    <h3 class="mt-4 font-bold text-navy">{{ $item['title'] }}</h3>
-                    <p class="mt-2 text-sm text-muted">{{ $item['description'] }}</p>
-                </div>
+                <article class="trust-strip-card">
+                    <span class="trust-strip-card-icon" aria-hidden="true">
+                        @if ($item['icon'] === 'ship')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 18H9"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="7" cy="18" r="2" stroke-width="1.75"/><circle cx="17" cy="18" r="2" stroke-width="1.75"/></svg>
+                        @elseif ($item['icon'] === 'shield')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m9 12 2 2 4-4"/></svg>
+                        @elseif ($item['icon'] === 'support')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3v-5Z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M21 11h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3v-5Z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 11V8a9 9 0 0 1 18 0v3"/></svg>
+                        @else
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 12v4"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="m9 15 3 3 3-3"/></svg>
+                        @endif
+                    </span>
+                    <h3 class="trust-strip-card-title">{{ $item['title'] }}</h3>
+                    <p class="trust-strip-card-desc">{{ $item['desc'] }}</p>
+                </article>
             @endforeach
         </div>
     </div>
 </section>
 
-{{-- Featured product showcase --}}
-@if ($showcaseProduct)
-<section class="home-section bg-white">
-    <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Featured Product', 'subtitle' => "Editor's pick this week"])
-        <div class="home-section-inner grid gap-8 lg:grid-cols-2">
-            <div class="grid grid-cols-2 gap-3">
-                @foreach ($showcaseGallery as $img)
-                    <div class="overflow-hidden rounded-2xl border border-border bg-secondary {{ $loop->first ? 'col-span-2 h-64' : 'h-40' }}">
-                        <img src="{{ Mbs::image($img) }}" alt="" class="h-full w-full object-cover">
-                    </div>
-                @endforeach
-            </div>
-            <div class="mbs-showcase-panel">
-                <p class="text-xs font-bold uppercase tracking-widest text-primary">Editor's Pick</p>
-                <h3 class="mt-3 text-2xl font-bold text-navy lg:text-3xl">{{ $showcaseProduct['name'] }}</h3>
-                <p class="mt-4 text-sm leading-relaxed text-muted">Premium quality with official warranty. Immersive sound and cinematic experience for your living room.</p>
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="star-rating">{{ Mbs::stars($showcaseProduct['rating']) }}</span>
-                    <span class="text-sm text-muted">({{ $showcaseProduct['review_count'] }} reviews)</span>
-                </div>
-                <p class="mt-4 text-3xl font-bold text-primary">{{ Mbs::price($showcaseProduct['price']) }}</p>
-                <div class="mt-6 flex flex-wrap gap-3">
-                    <a href="{{ route('shop') }}" class="mbs-btn mbs-btn-primary">View Product</a>
-                    <button type="button" @click="cartOpen = true" class="mbs-btn mbs-btn-outline">Add to Cart</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-@endif
-
-{{-- Featured collections --}}
-<section class="home-section bg-secondary">
-    <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Featured Collections', 'subtitle' => 'Curated collections for every lifestyle'])
-        <div class="home-section-inner grid gap-5 md:grid-cols-2">
-            @foreach ($featuredCollections as $collection)
-                <a href="{{ route($collection['href']) }}" class="mbs-collection-card group">
-                    <img src="{{ Mbs::image($collection['image']) }}" alt="{{ $collection['title'] }}">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy/85 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-2xl font-bold">{{ $collection['title'] }}</h3>
-                        <p class="mt-1 text-sm text-blue-100">{{ $collection['subtitle'] }}</p>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- Shop by brand --}}
-<section class="home-section bg-gradient-to-b from-primary-light/50 to-white">
-    <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Shop By Brand', 'subtitle' => 'Explore products from trusted brands', 'viewAllHref' => route('shop')])
-        <div class="home-section-inner grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
-            @foreach ($brands as $brand)
-                <a href="{{ route('shop') }}" class="mbs-brand-card">
-                    <span class="text-sm font-bold text-navy">{{ $brand['name'] }}</span>
-                </a>
-            @endforeach
-        </div>
-    </div>
-</section>
+<div class="mbs-section-separator" aria-hidden="true"></div>
 
 {{-- AI Smart Shopping --}}
 <section class="home-section mbs-ai-section">
     <div class="mbs-container">
         @include('components.section-header', ['title' => 'AI Smart Shopping', 'subtitle' => 'Personalized recommendations powered by smart search'])
-        <div class="home-section-inner grid gap-5 md:grid-cols-3">
+        <div class="home-section-inner grid gap-5 md:grid-cols-3 items-stretch">
             @foreach ($aiFeatures as $feature)
                 <div class="mbs-ai-card">
-                    <h3 class="text-lg font-bold">{{ $feature['title'] }}</h3>
-                    <p class="mt-2 text-sm text-blue-100">{{ $feature['description'] }}</p>
+                    <div class="mbs-ai-card-icon" aria-hidden="true">
+                        @if ($loop->index === 0)
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+                        @elseif ($loop->index === 1)
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 4.5v15m6-15v15M4.5 9h15M4.5 15h15"/></svg>
+                        @else
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 13.5h6m-8 0V18a2.25 2.25 0 0 0 2.25 2.25H9A2.25 2.25 0 0 1 6.75 18v-2.25m12 0V18a2.25 2.25 0 0 1-2.25 2.25h-1.5A2.25 2.25 0 0 1 13.5 18v-2.25m0-9V4.875c0-.621-.504-1.125-1.125-1.125h-3.75c-.621 0-1.125.504-1.125 1.125v3.375"/></svg>
+                        @endif
+                    </div>
+                    <h3 class="mbs-ai-card-title">{{ $feature['title'] }}</h3>
+                    <p class="mbs-ai-card-desc">{{ $feature['description'] }}</p>
                 </div>
             @endforeach
-        </div>
-        <div class="mt-8 text-center">
-            <button type="button" @click="searchOpen = true" class="mbs-btn mbs-btn-white">Try Smart Search</button>
         </div>
     </div>
 </section>
 
 {{-- Customer reviews --}}
-<section class="home-section bg-white">
+<section class="home-section testimonials-section">
     <div class="mbs-container">
-        @include('components.section-header', ['title' => 'What Customers Say', 'subtitle' => 'Real feedback from MyBestStore shoppers'])
-        <div class="home-section-inner grid gap-5 md:grid-cols-3">
-            @foreach ($reviews as $review)
-                <div class="mbs-review-card">
-                    <div class="star-rating text-lg">{{ str_repeat('★', $review['rating']) }}</div>
-                    <p class="mt-4 text-sm leading-relaxed text-muted">"{{ $review['text'] }}"</p>
-                    <p class="mt-4 text-sm font-bold text-navy">{{ $review['name'] }}</p>
+        <header class="testimonials-header">
+            <h2 class="testimonials-header-title">What Customers Say</h2>
+            <p class="testimonials-header-subtitle">Real feedback from happy MyBestStore shoppers across Pakistan.</p>
+        </header>
+
+        <div
+            class="testimonials-slider"
+            x-data="{
+                index: 0,
+                perView: 1,
+                total: {{ count($reviews) }},
+                init() { this.updatePerView(); },
+                updatePerView() {
+                    if (window.innerWidth >= 1024) this.perView = 3;
+                    else if (window.innerWidth >= 640) this.perView = 2;
+                    else this.perView = 1;
+                    if (this.index > this.maxIndex) this.index = this.maxIndex;
+                },
+                get maxIndex() { return Math.max(0, this.total - this.perView); },
+                scrollTo(index) {
+                    this.index = index;
+                    const track = this.$refs.track;
+                    const card = track.querySelector('.testimonial-card');
+                    if (!card) return;
+                    const gap = 20;
+                    track.scrollTo({ left: index * (card.offsetWidth + gap), behavior: 'smooth' });
+                },
+                prev() { if (this.index > 0) this.scrollTo(this.index - 1); },
+                next() { if (this.index < this.maxIndex) this.scrollTo(this.index + 1); }
+            }"
+            x-init="init()"
+            @resize.window="updatePerView()"
+        >
+            <div class="testimonials-slider-controls">
+                <button type="button" class="testimonials-arrow testimonials-arrow--prev" @click="prev()" :disabled="index === 0" aria-label="Previous reviews">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button type="button" class="testimonials-arrow testimonials-arrow--next" @click="next()" :disabled="index >= maxIndex" aria-label="Next reviews">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <div class="testimonials-viewport" x-ref="track">
+                <div class="testimonials-grid">
+                    @foreach ($reviews as $review)
+                        @php
+                            $nameParts = preg_split('/\s+/', trim($review['name']));
+                            $initials = '';
+                            foreach ($nameParts as $part) {
+                                $initials .= strtoupper(substr($part, 0, 1));
+                            }
+                            $initials = substr($initials, 0, 2);
+                        @endphp
+                        <article class="testimonial-card">
+                            <div class="testimonial-quote-icon" aria-hidden="true">
+                                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7.17 6A5.001 5.001 0 0 0 2 11c0 2.76 2.24 5 5 5 .55 0 1-.45 1-1v-1.08c0-.55-.45-1-1-1-1.38 0-2.5-1.12-2.5-2.5 0-1.2.86-2.2 2-2.45V6H7.17zm10 0A5.001 5.001 0 0 0 12 11c0 2.76 2.24 5 5 5 .55 0 1-.45 1-1v-1.08c0-.55-.45-1-1-1-1.38 0-2.5-1.12-2.5-2.5 0-1.2.86-2.2 2-2.45V6h-1.83z"/></svg>
+                            </div>
+                            <div class="testimonial-stars">
+                                @include('components.product-stars', ['rating' => $review['rating']])
+                            </div>
+                            <p class="testimonial-text">&ldquo;{{ $review['text'] }}&rdquo;</p>
+                            <div class="testimonial-author">
+                                @if (!empty($review['avatar']))
+                                    <img
+                                        src="{{ Mbs::image($review['avatar']) }}"
+                                        alt="{{ $review['name'] }}"
+                                        class="testimonial-avatar testimonial-avatar--photo"
+                                        loading="lazy"
+                                    >
+                                @else
+                                    <span class="testimonial-avatar" aria-hidden="true">{{ $initials }}</span>
+                                @endif
+                                <div class="testimonial-author-meta">
+                                    <p class="testimonial-author-name">{{ $review['name'] }}</p>
+                                    <span class="testimonial-badge">Verified Buyer</span>
+                                    @if (!empty($review['purchase']))
+                                        <span class="testimonial-purchase">{{ $review['purchase'] }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
                 </div>
-            @endforeach
+            </div>
+
+            <div class="testimonials-dots" role="tablist" aria-label="Review slides">
+                <template x-for="dot in (maxIndex + 1)" :key="dot">
+                    <button
+                        type="button"
+                        class="testimonials-dot"
+                        :class="{ 'is-active': index === (dot - 1) }"
+                        @click="scrollTo(dot - 1)"
+                        :aria-label="`Go to review slide ${dot}`"
+                    ></button>
+                </template>
+            </div>
         </div>
     </div>
 </section>
 
 {{-- FAQ --}}
-<section id="faq" class="home-section bg-secondary">
-    <div class="mx-auto max-w-3xl px-4 lg:px-6">
-        @include('components.section-header', ['title' => 'Frequently Asked Questions', 'centered' => true])
-        <div class="home-section-inner space-y-3">
-            @foreach ($faqs as $faq)
-                <details class="mbs-faq-item group">
-                    <summary class="cursor-pointer list-none font-bold text-navy marker:hidden">{{ $faq['q'] }}</summary>
-                    <p class="mt-3 text-sm leading-relaxed text-muted">{{ $faq['a'] }}</p>
-                </details>
+<section id="faq" class="home-section faq-section">
+    <div class="mbs-container">
+        <header class="faq-header">
+            <h2 class="faq-header-title">Got A Query? We Are Glad To Assist</h2>
+            <p class="faq-header-subtitle">Find quick answers about orders, delivery, payments, returns and product support.</p>
+        </header>
+        <div class="faq-grid" x-data="{ open: 0 }">
+            @foreach ($faqs as $index => $faq)
+                <div class="faq-item" :class="{ 'is-open': open === {{ $index }} }">
+                    <button
+                        type="button"
+                        class="faq-question"
+                        @click="open = open === {{ $index }} ? null : {{ $index }}"
+                        :aria-expanded="open === {{ $index }}"
+                    >
+                        <span class="faq-question-text">{{ $faq['q'] }}</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer-wrap" :aria-hidden="open !== {{ $index }}">
+                        <div class="faq-answer">
+                            <p>{{ $faq['a'] }}</p>
+                        </div>
+                    </div>
+                </div>
             @endforeach
         </div>
     </div>

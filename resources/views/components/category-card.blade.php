@@ -26,7 +26,7 @@
         @endif
         <div class="mt-3 flex items-center justify-between gap-3">
             <p class="text-sm text-muted">{{ $count }} products</p>
-            <a href="{{ route('shop') }}" class="mbs-section-link">
+            <a href="{{ Mbs::shopCategoryUrl($category['slug'] ?? '') }}" class="mbs-section-link">
                 Explore <span>→</span>
             </a>
         </div>

@@ -1,39 +1,57 @@
 @php
     use App\Support\StorefrontData;
-    use App\Support\Mbs;
-    $featured = array_slice(StorefrontData::allProducts(), 0, 8);
+    $featured = array_slice(StorefrontData::allProducts(), 0, 3);
+    $popularTerms = ['TV', 'Samsung', 'Soundbar', 'Air Purifier'];
 @endphp
 
 <div
     x-show="searchOpen"
     x-cloak
-    class="fixed inset-0 z-[70] flex items-start justify-center bg-slate-900/60 p-4 pt-20 backdrop-blur-sm"
+    class="search-modal-overlay"
     @keydown.escape.window="searchOpen = false"
 >
-    <div @click.outside="searchOpen = false" class="w-full max-w-3xl overflow-hidden rounded-2xl border border-border bg-white shadow-2xl">
-        <div class="flex items-center gap-3 border-b border-border px-5 py-4">
-            <svg class="h-5 w-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="m20 20-3.5-3.5"/></svg>
-            <input type="search" placeholder="Search products, brands, categories..." class="w-full border-0 text-base focus:outline-none focus:ring-0" autofocus>
-            <button type="button" @click="searchOpen = false" class="rounded-lg px-2 py-1 text-sm text-muted hover:bg-secondary">Esc</button>
-        </div>
-        <div class="max-h-[70vh] overflow-y-auto p-5">
-            <p class="text-xs font-bold uppercase tracking-wide text-muted">Popular searches</p>
-            <div class="mt-3 flex flex-wrap gap-2">
-                @foreach (['LED TV', 'Soundbar', 'Air Purifier', 'Home Theater', 'Vinyl', 'Sale'] as $term)
-                    <button type="button" class="rounded-full border border-border bg-secondary px-3 py-1.5 text-sm font-medium text-foreground hover:border-primary hover:text-primary">{{ $term }}</button>
-                @endforeach
+    <div class="search-modal" @click.outside="searchOpen = false" role="dialog" aria-modal="true" aria-label="Search">
+        <button type="button" class="search-modal-close" @click="searchOpen = false" aria-label="Close search">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+
+        <div class="search-modal-body">
+            <div class="search-modal-input-wrap">
+                <input
+                    type="search"
+                    placeholder="Search"
+                    class="search-modal-input"
+                    x-model="searchQuery"
+                    @input.debounce.350ms="runSearch()"
+                    autofocus
+                >
+                <svg class="search-modal-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" stroke-width="2"/>
+                    <path stroke-linecap="round" stroke-width="2" d="m20 20-3.5-3.5"/>
+                </svg>
             </div>
-            <p class="mt-6 text-xs font-bold uppercase tracking-wide text-muted">Featured products</p>
-            <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                @foreach ($featured as $product)
-                    <a href="{{ route('shop') }}" @click="searchOpen = false" class="flex gap-3 rounded-xl border border-border p-3 transition hover:border-primary/30 hover:bg-primary-light/30">
-                        <img src="{{ Mbs::image($product['image']) }}" alt="" class="h-16 w-16 rounded-lg object-cover bg-secondary">
-                        <div class="min-w-0">
-                            <p class="line-clamp-2 text-sm font-semibold text-navy">{{ $product['name'] }}</p>
-                            <p class="mt-1 text-sm font-bold text-primary">{{ Mbs::price($product['price']) }}</p>
-                        </div>
-                    </a>
+
+            <p class="search-popular-inline">
+                <span class="search-popular-label">Popular searches:</span>
+                @foreach ($popularTerms as $term)
+                    <button type="button" class="search-popular-link" @click="setPopularSearch(@js($term))">{{ $term }}</button>
                 @endforeach
+            </p>
+
+            <h2 class="search-featured-title" x-text="searchQuery.trim() ? 'Search Results' : 'Featured Products'"></h2>
+
+            <p class="search-modal-status" x-show="searchLoading">Searching...</p>
+            <p class="search-modal-empty" x-show="!searchLoading && searchQuery.trim() && searchEmpty" x-cloak>
+                No products found for your search.
+            </p>
+
+            <div class="search-modal-results" x-show="!searchLoading && !(searchQuery.trim() && searchEmpty)">
+                <div x-show="!searchQuery.trim()">
+                    @include('components.search-results-grid', ['products' => $featured])
+                </div>
+                <div x-show="searchQuery.trim()" x-cloak x-ref="searchResults" x-html="searchHtml"></div>
             </div>
         </div>
     </div>

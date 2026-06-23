@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Support\CmsIntegration;
 use App\Support\Mbs;
 use App\Support\StorefrontData;
 use Illuminate\Http\Request;
@@ -47,6 +48,13 @@ class ProductCatalogService
      */
     public function queryActiveProducts(): array
     {
+        if (CmsIntegration::usesCmsCatalog()) {
+            return array_map(
+                fn (array $product) => StorefrontData::enrichProduct($product),
+                StorefrontData::allProducts()
+            );
+        }
+
         if (Product::query()->exists()) {
             return Product::query()
                 ->with(['category', 'brand', 'images'])

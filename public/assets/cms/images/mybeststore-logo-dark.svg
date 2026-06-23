@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 44" fill="none" role="img" aria-label="MyBestStore">
+  <rect width="36" height="36" x="2" y="4" rx="10" fill="#16a34a"/>
+  <path fill="#fff" d="M12 14h16v3H12v-3Zm0 6h16v3H12v-3Zm0 6h11v3H12v-3Z"/>
+  <text x="48" y="30" fill="#0f2744" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="20" font-weight="800" letter-spacing="-0.02em">MyBestStore</text>
+</svg>

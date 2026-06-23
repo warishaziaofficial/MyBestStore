@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Order;
+use Cms\Models\Order as CmsOrder;
 
 class OrderPresenter
 {
@@ -39,20 +40,22 @@ class OrderPresenter
         };
     }
 
-    public static function trackingUrl(Order $order): ?string
+    public static function trackingUrl(Order|CmsOrder $order): ?string
     {
-        if (! filled($order->tracking_number)) {
+        if (! filled($order->tracking_number ?? null)) {
             return null;
         }
 
-        if ($order->relationLoaded('courierCompany') && $order->courierCompany) {
-            return $order->courierCompany->trackingLink($order->tracking_number);
-        }
+        if ($order instanceof Order) {
+            if ($order->relationLoaded('courierCompany') && $order->courierCompany) {
+                return $order->courierCompany->trackingLink($order->tracking_number);
+            }
 
-        if ($order->courier_company_id) {
-            $order->loadMissing('courierCompany');
+            if ($order->courier_company_id) {
+                $order->loadMissing('courierCompany');
 
-            return $order->courierCompany?->trackingLink($order->tracking_number);
+                return $order->courierCompany?->trackingLink($order->tracking_number);
+            }
         }
 
         return null;
@@ -76,7 +79,7 @@ class OrderPresenter
     /**
      * @return array<int, array{key: string, label: string, state: string}>
      */
-    public static function trackingTimeline(Order $order): array
+    public static function trackingTimeline(Order|CmsOrder $order): array
     {
         $steps = [
             ['key' => 'pending', 'label' => 'Pending'],
@@ -115,7 +118,7 @@ class OrderPresenter
         }, $steps, array_keys($steps));
     }
 
-    public static function resolveTrackingStep(Order $order): string
+    public static function resolveTrackingStep(Order|CmsOrder $order): string
     {
         if ($order->order_status === 'cancelled') {
             return 'pending';
@@ -148,7 +151,7 @@ class OrderPresenter
         return 'pending';
     }
 
-    public static function shippingAddress(Order $order): string
+    public static function shippingAddress(Order|CmsOrder $order): string
     {
         $parts = array_filter([
             $order->shipping_address,

@@ -10,13 +10,13 @@
 <section class="home-section bg-gradient-to-b from-primary-light/50 to-white">
     <div class="mbs-container">
         @include('components.section-header', ['title' => 'Shop By Brand', 'subtitle' => 'Explore products from trusted brands', 'viewAllHref' => route('categories')])
-        <div class="home-section-inner grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+        <div class="home-section-inner grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 max-w-6xl mx-auto">
             @foreach ($brands as $brand)
-                <a href="{{ route('shop') }}" class="mbs-brand-card" title="{{ $brand['name'] }}">
+                <a href="{{ route('shop', ['brand' => $brand['name']]) }}" class="mbs-brand-card" title="{{ $brand['name'] }}">
                     <img
                         src="{{ Mbs::image($brand['logo'] ?? '') }}"
                         alt="{{ $brand['name'] }}"
-                        class="mbs-brand-card-logo{{ in_array($brand['id'], ['samsung', 'sony', 'panasonic', 'denon'], true) ? ' mbs-brand-card-logo--lg' : '' }}"
+                        class="mbs-brand-card-logo mbs-brand-card-logo--lg"
                         loading="lazy"
                     >
                 </a>
@@ -194,7 +194,14 @@
             </aside>
             <div class="featured-collections-items">
                 @foreach ($featuredCollections as $collection)
-                    <a href="{{ !empty($collection['category']) ? Mbs::shopCategoryUrl($collection['category']) : route($collection['href'] ?? 'shop') }}" class="featured-collection-tile">
+                    @php
+                        $collectionUrl = ! empty($collection['slug'])
+                            ? route('product.show', $collection['slug'])
+                            : (! empty($collection['category'])
+                                ? Mbs::shopCategoryUrl($collection['category'])
+                                : route($collection['href'] ?? 'shop'));
+                    @endphp
+                    <a href="{{ $collectionUrl }}" class="featured-collection-tile">
                         <div class="featured-collection-image-wrap">
                             <img
                                 src="{{ Mbs::image($collection['image']) }}"
@@ -205,9 +212,6 @@
                         </div>
                         <div class="featured-collection-info">
                             <h3 class="featured-collection-name">{{ $collection['title'] }}</h3>
-                            @if (!empty($collection['price']))
-                                <p class="featured-collection-price">{{ Mbs::price((int) $collection['price']) }}</p>
-                            @endif
                         </div>
                     </a>
                 @endforeach
@@ -436,4 +440,24 @@
         </div>
     </div>
 </section>
+
+<button
+    type="button"
+    class="mbs-scroll-top"
+    x-data="{ visible: false }"
+    x-init="
+        const update = () => { visible = window.scrollY > 400 };
+        window.addEventListener('scroll', update, { passive: true });
+        update();
+    "
+    x-show="visible"
+    x-transition
+    x-cloak
+    @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    aria-label="Back to top"
+>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+</button>
 @endsection

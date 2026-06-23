@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Support\StorefrontData;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 
 class CartService
@@ -224,10 +225,12 @@ class CartService
 
     private function resolveProductWeight(string $slug): float
     {
-        $product = Product::query()->where('slug', $slug)->value('weight');
+        if (Schema::hasTable('products')) {
+            $weight = Product::query()->where('slug', $slug)->value('weight');
 
-        if ($product !== null) {
-            return (float) $product;
+            if ($weight !== null) {
+                return (float) $weight;
+            }
         }
 
         $storeProduct = StorefrontData::findBySlug($slug);

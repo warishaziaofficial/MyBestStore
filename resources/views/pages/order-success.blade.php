@@ -135,7 +135,7 @@
                 <a href="{{ route('order.track', $order->order_number) }}" class="mbs-btn mbs-btn-outline">Track Order</a>
                 <a href="{{ route('shop') }}" class="mbs-btn mbs-btn-primary">Continue Shopping</a>
                 <a href="{{ route('home') }}" class="mbs-btn mbs-btn-outline">Back to Home</a>
-                <a href="{{ route('order.invoice', $order->order_number) }}" class="mbs-btn mbs-btn-outline order-success-invoice-btn" target="_blank" rel="noopener">Download Invoice</a>
+                <a href="{{ route('order.invoice.download', $order->order_number) }}" class="mbs-btn mbs-btn-outline order-success-invoice-btn" target="_blank" rel="noopener">Download Invoice</a>
             </div>
         </div>
     </div>

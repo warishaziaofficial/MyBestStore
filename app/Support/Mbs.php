@@ -17,7 +17,14 @@ class Mbs
             return $path;
         }
 
-        return asset(ltrim($path, '/'));
+        $relative = ltrim($path, '/');
+        $fullPath = public_path($relative);
+
+        if (! is_file($fullPath)) {
+            return asset('placeholder-product.svg');
+        }
+
+        return asset($relative);
     }
 
     public static function price(int|float $amount): string

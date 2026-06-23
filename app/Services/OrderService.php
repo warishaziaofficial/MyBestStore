@@ -2,14 +2,19 @@
 
 namespace App\Services;
 
-use App\Mail\OrderInvoiceMail;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\Payments\PaymentGatewayInterface;
 use App\Services\Payments\PaymentManager;
+use App\Support\CmsIntegration;
+use Cms\Models\Order as CmsOrder;
+use Cms\Models\OrderItem as CmsOrderItem;
+use Cms\Models\Product as CmsProduct;
+use Cms\Support\StockAlertNotifier;
+use Cms\Support\StoreNotifier;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class OrderService
@@ -22,7 +27,7 @@ class OrderService
 
     /**
      * @param  array<string, mixed>  $data
-     * @return array{order: Order, message: string}
+     * @return array{order: Order|CmsOrder, message: string, redirect_url?: string|null}
      */
     public function place(array $data): array
     {
@@ -34,6 +39,10 @@ class OrderService
 
         if (! $gateway) {
             throw new \RuntimeException('Invalid payment method selected.');
+        }
+
+        if (CmsIntegration::preferCmsOrders()) {
+            return $this->placeCmsOrder($data, $gateway);
         }
 
         $result = DB::transaction(function () use ($data, $gateway) {
@@ -110,35 +119,165 @@ class OrderService
             ];
         });
 
-        $this->sendInvoiceEmail($result['order']);
+        StoreNotifier::orderPlaced($result['order'], $gateway->label());
 
         return $result;
     }
 
-    private function sendInvoiceEmail(Order $order): void
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array{order: CmsOrder, message: string, redirect_url?: string|null}
+     */
+    private function placeCmsOrder(array $data, PaymentGatewayInterface $gateway): array
     {
-        try {
-            Mail::to($order->customer_email)->send(new OrderInvoiceMail($order));
-        } catch (\Throwable $e) {
-            Log::error('Order invoice email failed', [
-                'order_id' => $order->id,
-                'order_number' => $order->order_number,
-                'error' => $e->getMessage(),
-            ]);
+        if (Schema::hasColumn('Products', 'stock')) {
+            foreach ($this->cart->items() as $item) {
+                $product = CmsProduct::query()->where('slug', $item['slug'])->first();
+
+                if ($product && (int) $product->stock < (int) $item['quantity']) {
+                    throw new \RuntimeException('Insufficient stock for '.$product->name.'.');
+                }
+            }
         }
+
+        $shippingAmount = (int) ($data['shipping_amount'] ?? 0);
+        $subtotal = $this->cart->subtotal();
+        $totalAmount = max(0, $subtotal + $shippingAmount - $this->cart->discount());
+        $paymentMethod = CmsIntegration::cmsPaymentMethod($gateway->key());
+
+        $result = DB::transaction(function () use ($data, $gateway, $shippingAmount, $subtotal, $totalAmount, $paymentMethod) {
+            $notes = json_encode([
+                'shipping' => [
+                    'address' => $data['shipping_address'] ?? null,
+                    'city' => $data['city'] ?? null,
+                    'province' => $data['province'] ?? null,
+                    'country' => $data['country'] ?? null,
+                    'postal_code' => $data['postal_code'] ?? null,
+                    'method' => $data['shipping_method'] ?? null,
+                    'zone' => $data['shipping_zone'] ?? null,
+                ],
+                'customer_notes' => $data['notes'] ?? null,
+            ], JSON_UNESCAPED_UNICODE);
+
+            $payload = [
+                'order_number' => $this->generateOrderNumber(),
+                'customer_name' => $data['customer_name'],
+                'customer_email' => $data['customer_email'],
+                'customer_phone' => $data['customer_phone'] ?? null,
+                'status' => 'pending',
+                'payment_status' => 'pending',
+                'subtotal' => $subtotal,
+                'shipping' => $shippingAmount,
+                'total' => $totalAmount,
+                'notes' => $notes,
+            ];
+
+            if (Schema::hasColumn('Orders', 'source')) {
+                $payload['source'] = 'website';
+            }
+
+            if (Schema::hasColumn('Orders', 'payment_method')) {
+                $payload['payment_method'] = $paymentMethod;
+            }
+
+            $order = CmsOrder::query()->create($payload);
+
+            foreach ($this->cart->items() as $item) {
+                $product = CmsProduct::query()->where('slug', $item['slug'])->first();
+
+                CmsOrderItem::query()->create([
+                    'order_id' => $order->id,
+                    'product_id' => $product?->id,
+                    'product_name' => $item['name'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'line_total' => $item['price'] * $item['quantity'],
+                ]);
+
+                if ($product && Schema::hasColumn('Products', 'stock')) {
+                    $previousStock = (int) $product->stock;
+                    $product->decrement('stock', (int) $item['quantity']);
+                    StockAlertNotifier::afterStockChange((int) $product->id, $previousStock);
+                }
+            }
+
+            $paymentResult = $this->resolveCmsPaymentResult($gateway, $paymentMethod);
+
+            $order->update([
+                'payment_status' => $this->mapCmsPaymentStatus($paymentResult['payment_status']),
+                'status' => $paymentResult['order_status'] ?? ($paymentResult['success'] ? 'confirmed' : 'pending'),
+            ]);
+
+            $this->cart->clear();
+
+            return [
+                'order' => $order->fresh(['items.product']),
+                'message' => $paymentResult['message'],
+                'redirect_url' => $paymentResult['redirect_url'] ?? null,
+            ];
+        });
+
+        StoreNotifier::orderPlaced($result['order'], $gateway->label());
+
+        return $result;
     }
 
-    public function findByNumber(string $orderNumber): ?Order
+    /**
+     * @return array{success: bool, payment_status: string, order_status?: string, message: string, redirect_url?: string|null}
+     */
+    private function resolveCmsPaymentResult(PaymentGatewayInterface $gateway, string $paymentMethod): array
     {
+        return match ($paymentMethod) {
+            'cod', 'cash_on_delivery' => [
+                'success' => true,
+                'payment_status' => 'unpaid',
+                'order_status' => 'confirmed',
+                'message' => 'Your order has been placed. Pay on delivery.',
+                'redirect_url' => null,
+            ],
+            default => [
+                'success' => true,
+                'payment_status' => 'pending',
+                'order_status' => 'pending',
+                'message' => 'Your order has been placed.',
+                'redirect_url' => null,
+            ],
+        };
+    }
+
+    private function mapCmsPaymentStatus(string $status): string
+    {
+        return match ($status) {
+            'unpaid' => 'pending',
+            default => $status,
+        };
+    }
+
+    public function findByNumber(string $orderNumber): Order|CmsOrder|null
+    {
+        if (CmsIntegration::preferCmsOrders()) {
+            return CmsOrder::query()
+                ->with(['items.product'])
+                ->where('order_number', $orderNumber)
+                ->first();
+        }
+
         return Order::query()->with(['items', 'courierCompany'])->where('order_number', $orderNumber)->first();
     }
 
-    public function findByScan(string $scan): ?Order
+    public function findByScan(string $scan): Order|CmsOrder|null
     {
         $scan = trim($scan);
 
         if ($scan === '') {
             return null;
+        }
+
+        if (CmsIntegration::preferCmsOrders()) {
+            return CmsOrder::query()
+                ->with(['items.product'])
+                ->where('order_number', $scan)
+                ->first();
         }
 
         return Order::query()
@@ -155,7 +294,10 @@ class OrderService
     {
         do {
             $number = 'MBS-'.now()->format('Ymd').'-'.Str::upper(Str::random(6));
-        } while (Order::query()->where('order_number', $number)->exists());
+        } while (
+            (CmsIntegration::preferCmsOrders() && CmsOrder::query()->where('order_number', $number)->exists())
+            || (! CmsIntegration::preferCmsOrders() && Order::query()->where('order_number', $number)->exists())
+        );
 
         return $number;
     }

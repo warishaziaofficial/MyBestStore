@@ -3,10 +3,16 @@
 namespace App\Services;
 
 use App\Models\ProductRelation;
+use App\Support\CmsIntegration;
 use App\Support\StorefrontData;
+use Illuminate\Support\Facades\Schema;
 
 class ProductRelationService
 {
+    public function __construct(
+        private readonly ProductSalesAnalytics $sales,
+    ) {}
+
     /**
      * @return array<int, array<string, mixed>>
      */
@@ -284,6 +290,14 @@ class ProductRelationService
      */
     private function fromDatabase(string $slug, string $type, int $limit, array $exclude): array
     {
+        if (CmsIntegration::usesCmsCatalog() && Schema::hasTable('ProductRelations')) {
+            return $this->fromCmsDatabase($slug, $type, $limit, $exclude);
+        }
+
+        if (! Schema::hasTable('product_relations')) {
+            return [];
+        }
+
         $relations = ProductRelation::query()
             ->where('product_slug', $slug)
             ->where('relation_type', $type)
@@ -309,6 +323,43 @@ class ProductRelationService
 
             if (count($products) >= $limit) {
                 break;
+            }
+        }
+
+        return $products;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function fromCmsDatabase(string $slug, string $type, int $limit, array $exclude): array
+    {
+        $product = StorefrontData::findBySlug($slug);
+
+        if (! $product || empty($product['id'])) {
+            return [];
+        }
+
+        $products = [];
+
+        foreach (StorefrontData::productRelationGroups((int) $product['id']) as $group) {
+            if (($group['type'] ?? '') !== $type) {
+                continue;
+            }
+
+            foreach ($group['products'] ?? [] as $related) {
+                $relatedSlug = $related['slug'] ?? '';
+
+                if ($relatedSlug === '' || in_array($relatedSlug, $exclude, true)) {
+                    continue;
+                }
+
+                $products[] = StorefrontData::enrichProduct($related);
+                $exclude[] = $relatedSlug;
+
+                if (count($products) >= $limit) {
+                    return $products;
+                }
             }
         }
 
@@ -403,6 +454,35 @@ class ProductRelationService
      */
     public function selectedSlugsForProduct(string $slug): array
     {
+        if (CmsIntegration::usesCmsCatalog() && Schema::hasTable('ProductRelations')) {
+            $product = StorefrontData::findBySlug($slug);
+
+            if (! $product || empty($product['id'])) {
+                return ['upsell' => [], 'cross_sell' => [], 'related' => []];
+            }
+
+            $selected = ['upsell' => [], 'cross_sell' => [], 'related' => []];
+
+            foreach (StorefrontData::productRelationGroups((int) $product['id']) as $group) {
+                $type = $group['type'] ?? '';
+
+                if (! isset($selected[$type])) {
+                    continue;
+                }
+
+                $selected[$type] = array_values(array_filter(array_map(
+                    fn (array $item) => $item['slug'] ?? null,
+                    $group['products'] ?? []
+                )));
+            }
+
+            return $selected;
+        }
+
+        if (! Schema::hasTable('product_relations')) {
+            return ['upsell' => [], 'cross_sell' => [], 'related' => []];
+        }
+
         $grouped = ProductRelation::query()
             ->where('product_slug', $slug)
             ->orderBy('sort_order')
@@ -422,6 +502,14 @@ class ProductRelationService
      */
     public function syncForProduct(string $slug, array $relations): void
     {
+        if (CmsIntegration::usesCmsCatalog() && Schema::hasTable('ProductRelations')) {
+            return;
+        }
+
+        if (! Schema::hasTable('product_relations')) {
+            return;
+        }
+
         ProductRelation::query()->where('product_slug', $slug)->delete();
 
         foreach ([ProductRelation::TYPE_UPSELL, ProductRelation::TYPE_CROSS_SELL, ProductRelation::TYPE_RELATED] as $type) {

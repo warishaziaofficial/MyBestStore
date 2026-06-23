@@ -51,12 +51,6 @@ class OrderController extends Controller
 
         abort_unless($order, 404);
 
-        if (! extension_loaded('gd')) {
-            return redirect()
-                ->route('order.invoice', $order->order_number)
-                ->with('error', 'PDF download requires PHP GD extension. Please enable GD extension or use Print Invoice.');
-        }
-
         try {
             $pdf = Pdf::loadView('orders.invoice-pdf', ['order' => $order])
                 ->setPaper('a4', 'portrait');
@@ -68,9 +62,13 @@ class OrderController extends Controller
                 'error' => $e->getMessage(),
             ]);
 
+            $message = str_contains($e->getMessage(), 'DomPDF') || str_contains($e->getMessage(), 'Pdf')
+                ? 'PDF library is missing. Run composer install in the project folder, then try again.'
+                : 'Invoice PDF could not be generated. Please try Print Invoice.';
+
             return redirect()
                 ->route('order.invoice', $order->order_number)
-                ->with('error', 'Invoice PDF could not be generated. Please try Print Invoice.');
+                ->with('error', $message);
         }
     }
 }

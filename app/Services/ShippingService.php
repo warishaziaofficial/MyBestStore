@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class ShippingService
 {
@@ -130,6 +131,10 @@ class ShippingService
 
     public function resolveZone(string $country, string $province, string $city): ?ShippingZone
     {
+        if (! Schema::hasTable('shipping_zones')) {
+            return null;
+        }
+
         $zones = ShippingZone::query()->active()->where('country', $country)->get();
 
         if ($zones->isEmpty()) {

@@ -1,0 +1,20 @@
+CREATE TABLE Products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    price INT NOT NULL,
+    old_price INT NULL,
+    image VARCHAR(500) NOT NULL,
+    image_alt VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    sub_category VARCHAR(100) NOT NULL,
+    description LONGTEXT NULL,
+    rating DECIMAL(2, 1) NOT NULL,
+    review_count INT NOT NULL,
+    badge VARCHAR(20) NULL,
+    featured TINYINT(1) NOT NULL DEFAULT 0,
+    brand VARCHAR(100) NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

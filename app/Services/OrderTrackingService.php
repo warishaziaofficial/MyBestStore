@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Support\CmsIntegration;
+use Cms\Models\Order as CmsOrder;
 
 class OrderTrackingService
 {
-    public function findForCustomer(string $identifier, ?string $phone = null, ?string $email = null): ?Order
+    public function findForCustomer(string $identifier, ?string $phone = null, ?string $email = null): Order|CmsOrder|null
     {
         $identifier = trim($identifier);
         $phone = trim((string) $phone);
@@ -16,13 +18,20 @@ class OrderTrackingService
             return null;
         }
 
-        $order = Order::query()
-            ->with(['items', 'courierCompany'])
-            ->where(function ($query) use ($identifier) {
-                $query->where('order_number', $identifier)
-                    ->orWhere('order_barcode', $identifier);
-            })
-            ->first();
+        if (CmsIntegration::preferCmsOrders()) {
+            $order = CmsOrder::query()
+                ->with(['items.product'])
+                ->where('order_number', $identifier)
+                ->first();
+        } else {
+            $order = Order::query()
+                ->with(['items', 'courierCompany'])
+                ->where(function ($query) use ($identifier) {
+                    $query->where('order_number', $identifier)
+                        ->orWhere('order_barcode', $identifier);
+                })
+                ->first();
+        }
 
         if (! $order) {
             return null;
@@ -35,17 +44,17 @@ class OrderTrackingService
         return $order;
     }
 
-    public function markVerified(Order $order): void
+    public function markVerified(Order|CmsOrder $order): void
     {
         session()->put($this->sessionKey($order), true);
     }
 
-    public function isVerified(Order $order): bool
+    public function isVerified(Order|CmsOrder $order): bool
     {
         return (bool) session($this->sessionKey($order), false);
     }
 
-    private function matchesCustomer(Order $order, string $phone, string $email): bool
+    private function matchesCustomer(Order|CmsOrder $order, string $phone, string $email): bool
     {
         $phoneMatch = false;
         $emailMatch = false;
@@ -71,7 +80,7 @@ class OrderTrackingService
         return preg_replace('/\D+/', '', $phone) ?? '';
     }
 
-    private function sessionKey(Order $order): string
+    private function sessionKey(Order|CmsOrder $order): string
     {
         return 'order_track_verified_'.$order->id;
     }

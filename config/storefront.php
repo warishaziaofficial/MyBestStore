@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'allow_dev_fallback' => env('STOREFRONT_DEV_FALLBACK', false),
+    'use_theme_defaults' => env('STOREFRONT_THEME_DEFAULTS', true),
+
     'navigation' => [
         ['label' => 'Home', 'href' => 'home', 'route' => true],
         ['label' => 'Shop', 'href' => 'shop', 'route' => true, 'mega' => true],
@@ -17,9 +20,9 @@ return [
             'href' => 'shop',
             'route' => true,
             'links' => [
-                ['label' => 'Samsung Neo QLED 4K Smart TV', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smart-tv.jpg'],
-                ['label' => 'LG OLED evo Smart TV', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smart-tv.jpg'],
-                ['label' => 'Sony Bravia 4K Google TV', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smart-tv.jpg'],
+                ['label' => 'Samsung Neo QLED 4K Smart TV', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/samsung-neo-qled-4k-smart-tv.jpg'],
+                ['label' => 'LG OLED evo Smart TV', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/lg-oled-evo-smart-tv.jpg'],
+                ['label' => 'Sony Bravia 4K Google TV', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/sony-bravia-4k-google-tv.jpg'],
             ],
         ],
         [
@@ -28,10 +31,10 @@ return [
             'href' => 'shop',
             'route' => true,
             'links' => [
-                ['label' => 'Samsung Dolby Atmos Soundbar', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/soundbar.jpg'],
-                ['label' => 'Sony Wireless Noise Cancelling Headphones', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/headphones.jpg'],
-                ['label' => 'JBL PartyBox Speaker', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/speaker.jpg'],
-                ['label' => 'Bose Bluetooth Speaker', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/speaker.jpg'],
+                ['label' => 'Samsung Dolby Atmos Soundbar', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/samsung-dolby-atmos-soundbar.jpg'],
+                ['label' => 'Sony Wireless Noise Cancelling Headphones', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/sony-wireless-noise-cancelling-headphones.jpg'],
+                ['label' => 'JBL PartyBox Speaker', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/jbl-partybox-speaker.jpg'],
+                ['label' => 'Bose Bluetooth Speaker', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/bose-bluetooth-speaker.jpg'],
             ],
         ],
         [
@@ -40,10 +43,10 @@ return [
             'href' => 'shop',
             'route' => true,
             'links' => [
-                ['label' => 'Smart Air Purifier', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/air-purifier.jpg'],
-                ['label' => 'Robot Vacuum Cleaner', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/home-theater.jpg'],
-                ['label' => 'Smart Door Lock', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smartwatch.jpg'],
-                ['label' => 'Smart Security Camera', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/camera.jpg'],
+                ['label' => 'Smart Air Purifier', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/smart-air-purifier.jpg'],
+                ['label' => 'Robot Vacuum Cleaner', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/robot-vacuum-cleaner.jpg'],
+                ['label' => 'Smart Door Lock', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/smart-door-lock.jpg'],
+                ['label' => 'Smart Security Camera', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/smart-security-camera.jpg'],
             ],
         ],
         [
@@ -52,10 +55,10 @@ return [
             'href' => 'shop',
             'route' => true,
             'links' => [
-                ['label' => 'Gaming Headset', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/headphones.jpg'],
-                ['label' => 'Gaming Monitor', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/computer.jpg'],
-                ['label' => 'Wireless Gaming Controller', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/accessories.jpg'],
-                ['label' => 'Mechanical Keyboard', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/computer.jpg'],
+                ['label' => 'Gaming Headset', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/gaming-headset.jpg'],
+                ['label' => 'Gaming Monitor', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/gaming-monitor.jpg'],
+                ['label' => 'Wireless Gaming Controller', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/wireless-gaming-controller.jpg'],
+                ['label' => 'Mechanical Keyboard', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/mechanical-keyboard.jpg'],
             ],
         ],
         [
@@ -64,10 +67,10 @@ return [
             'href' => 'shop',
             'route' => true,
             'links' => [
-                ['label' => 'Type-C Fast Charger', 'href' => 'shop', 'route' => true, 'image' => 'images/categories/mobile-accessories.jpg'],
-                ['label' => 'Wireless Charging Pad', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/accessories.jpg'],
-                ['label' => 'Power Bank', 'href' => 'shop', 'route' => true, 'image' => 'images/categories/mobile-accessories.jpg'],
-                ['label' => 'Smartwatch', 'href' => 'shop', 'route' => true, 'image' => 'assets/images/feature-carousel/smartwatch.jpg'],
+                ['label' => 'Type-C Fast Charger', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/type-c-fast-charger.jpg'],
+                ['label' => 'Wireless Charging Pad', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/wireless-charging-pad.jpg'],
+                ['label' => 'Power Bank', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/power-bank.jpg'],
+                ['label' => 'Smartwatch', 'href' => 'shop', 'route' => true, 'image' => 'uploads/cms/mega-menu/2026/06/smartwatch.jpg'],
             ],
         ],
     ],
@@ -158,6 +161,18 @@ return [
             'image' => 'assets/images/feature-carousel/accessories.jpg',
             'category' => 'accessories',
         ],
+        [
+            'title' => 'Samsung Neo QLED TV',
+            'image' => 'uploads/cms/mega-menu/2026/06/samsung-neo-qled-4k-smart-tv.jpg',
+            'slug' => 'samsung-neo-qled-4k-smart-tv',
+            'price' => 289999,
+        ],
+        [
+            'title' => 'Sony Wireless Headphones',
+            'image' => 'uploads/cms/mega-menu/2026/06/sony-wireless-noise-cancelling-headphones.jpg',
+            'slug' => 'sony-wireless-noise-cancelling-headphones',
+            'price' => 45999,
+        ],
     ],
 
     'category_banners' => [
@@ -168,12 +183,11 @@ return [
 
     'brands' => [
         ['id' => 'samsung', 'name' => 'Samsung', 'logo' => 'assets/images/brands/samsung.svg'],
-        ['id' => 'tcl', 'name' => 'TCL', 'logo' => 'assets/images/brands/tcl.svg'],
         ['id' => 'sony', 'name' => 'Sony', 'logo' => 'assets/images/brands/sony.svg'],
         ['id' => 'panasonic', 'name' => 'Panasonic', 'logo' => 'assets/images/brands/panasonic.svg'],
-        ['id' => 'sharp', 'name' => 'Sharp', 'logo' => 'assets/images/brands/sharp.svg'],
-        ['id' => 'pioneer', 'name' => 'Pioneer', 'logo' => 'assets/images/brands/pioneer.svg'],
+        ['id' => 'tcl', 'name' => 'TCL', 'logo' => 'assets/images/brands/tcl.svg'],
         ['id' => 'denon', 'name' => 'Denon', 'logo' => 'assets/images/brands/denon.svg'],
+        ['id' => 'pioneer', 'name' => 'Pioneer', 'logo' => 'assets/images/brands/pioneer.svg'],
     ],
 
     'ai_features' => [

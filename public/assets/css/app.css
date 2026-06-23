@@ -4949,6 +4949,36 @@ img {
     height: 4.75rem;
 }
 
+.mbs-scroll-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 35%, transparent);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mbs-scroll-top:hover {
+    transform: translateY(-2px);
+    background: var(--primary-hover);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+.mbs-scroll-top:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
 .mbs-collection-card {
     position: relative;
     overflow: hidden;

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Customer;
+use App\Support\ChatwootSettings;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +15,7 @@ class CrmContactSync
             return false;
         }
 
-        $baseUrl = trim((string) config('crm.base_url', ''));
+        $baseUrl = trim((string) (ChatwootSettings::resolved()['crm_url'] ?: config('crm.base_url', '')));
         $apiKey = trim((string) config('crm.api_key', ''));
 
         if ($baseUrl === '' || $apiKey === '') {

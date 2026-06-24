@@ -59,6 +59,7 @@
                         || request()->is('cms/manage/newsletter-subscribers*')
                         || request()->routeIs('cms.customers.password-reset*');
                     $navIntegrationsOpen = request()->routeIs('cms.social.*')
+                        || request()->routeIs('cms.settings.chatbot*')
                         || request()->is('cms/manage/social-*')
                         || request()->is('cms/manage/email-templates*');
                     $navSettingsOpen = request()->is('cms/manage/users*')
@@ -136,6 +137,7 @@
                         <summary class="sf-nav-group-title">Integrations</summary>
                         <div class="sf-nav-group-links">
                             <a href="{{ route('cms.social.index') }}" @class(['sf-nav-link sf-nav-link--sub', 'is-active' => request()->routeIs('cms.social.*') || request()->is('cms/manage/social-accounts*') || request()->is('cms/manage/social-sync-logs*')])>Social Integration</a>
+                            <a href="{{ route('cms.settings.chatbot') }}" @class(['sf-nav-link sf-nav-link--sub', 'is-active' => request()->routeIs('cms.settings.chatbot*')])>Chatbot</a>
                             <a href="{{ route('cms.resource.index', 'email-templates') }}" @class(['sf-nav-link sf-nav-link--sub', 'is-active' => request()->is('cms/manage/email-templates*')])>Email Templates</a>
                         </div>
                     </details>

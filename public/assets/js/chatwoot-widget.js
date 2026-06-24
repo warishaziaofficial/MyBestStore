@@ -3,8 +3,30 @@
 
     var config = window.__MBS_CHATWOOT__;
 
-    if (!config || !config.baseUrl || !config.websiteToken) {
+    if (!config || !config.baseUrl) {
         return;
+    }
+
+    if (!config.websiteToken && !config.fallbackEnabled) {
+        return;
+    }
+
+    var fallbackShown = false;
+
+    function showFallback() {
+        if (fallbackShown || !config.fallbackEnabled || !config.fallbackUrl) {
+            return;
+        }
+
+        fallbackShown = true;
+
+        var button = document.createElement('a');
+        button.href = config.fallbackUrl;
+        button.className = 'mbs-chat-fallback';
+        button.setAttribute('aria-label', config.launcherTitle || 'Chat with us');
+        button.innerHTML = '<span class="mbs-chat-fallback__icon" aria-hidden="true">💬</span><span class="mbs-chat-fallback__label">' + (config.launcherTitle || 'Chat with us') + '</span>';
+
+        document.body.appendChild(button);
     }
 
     function identifyUser(customer) {
@@ -69,12 +91,20 @@
 
         script.src = config.baseUrl + '/packs/js/sdk.js';
         script.async = true;
+
+        if (!config.websiteToken) {
+            showFallback();
+            return;
+        }
+
         script.onerror = function () {
             console.warn('Chatwoot SDK could not be loaded from ' + config.baseUrl);
+            showFallback();
         };
 
         script.onload = function () {
             if (!window.chatwootSDK) {
+                showFallback();
                 return;
             }
 
@@ -95,9 +125,16 @@
 
                 if (attempts >= 40) {
                     window.clearInterval(readyTimer);
+                    showFallback();
                 }
             }, 250);
         };
+
+        window.setTimeout(function () {
+            if (!window.$chatwoot && !fallbackShown) {
+                showFallback();
+            }
+        }, 8000);
 
         firstScript.parentNode.insertBefore(script, firstScript);
     })(document, 'script');

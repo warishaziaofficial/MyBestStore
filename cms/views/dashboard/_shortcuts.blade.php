@@ -24,6 +24,7 @@
             ['label' => 'Newsletter', 'route' => route('cms.resource.index', 'newsletter-subscribers')],
         ],
         'Integrations' => [
+            ['label' => 'Chatbot', 'route' => route('cms.settings.chatbot')],
             ['label' => 'Social Integration', 'route' => route('cms.social.index')],
             ['label' => 'Dispatch Queue', 'route' => route('cms.dispatch.queue')],
         ],

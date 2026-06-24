@@ -4,6 +4,7 @@ use Cms\Http\Controllers\AuthController;
 use Cms\Http\Controllers\CustomerPasswordController;
 use Cms\Http\Controllers\DispatchController;
 use Cms\Http\Controllers\DashboardController;
+use Cms\Http\Controllers\ChatSettingsController;
 use Cms\Http\Controllers\FooterSettingsController;
 use Cms\Http\Controllers\MerchandisingController;
 use Cms\Http\Controllers\NotificationController;
@@ -77,6 +78,8 @@ Route::middleware('cms.auth')->group(function (): void {
 
     Route::get('/settings/footer', [FooterSettingsController::class, 'edit'])->name('cms.settings.footer');
     Route::put('/settings/footer', [FooterSettingsController::class, 'update'])->middleware('cms.role:admin,editor')->name('cms.settings.footer.update');
+    Route::get('/settings/chatbot', [ChatSettingsController::class, 'edit'])->name('cms.settings.chatbot');
+    Route::put('/settings/chatbot', [ChatSettingsController::class, 'update'])->middleware('cms.role:admin,editor')->name('cms.settings.chatbot.update');
 
     Route::prefix('manage/{entity}')
         ->where(['entity' => ResourceRegistry::keys()])

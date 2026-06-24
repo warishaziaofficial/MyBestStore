@@ -376,7 +376,7 @@
 {{-- Blog --}}
 <section class="home-section bg-white">
     <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Guides, Tips & News', 'subtitle' => 'Expert advice for smarter shopping', 'viewAllHref' => route('blog')])
+        @include('components.section-header', ['title' => 'Guides, Tips & News', 'subtitle' => 'Buying guides for POS, barcode, security and retail hardware', 'viewAllHref' => route('blog')])
         <div class="home-section-inner grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             @foreach (array_slice($posts, 0, 3) as $post)
                 @include('components.blog-card', ['post' => $post])

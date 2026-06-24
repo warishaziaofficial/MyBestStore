@@ -204,9 +204,48 @@ return [
     ],
 
     'category_banners' => [
-        ['title' => 'LED TVs', 'image' => 'images/categories/led-tvs.jpg', 'href' => 'shop', 'slug' => 'led-tvs', 'subtitle' => '4K, QLED & Smart TVs for every room'],
-        ['title' => 'Sound Bars', 'image' => 'images/categories/sound-bars.jpg', 'href' => 'shop', 'slug' => 'sound-bars', 'subtitle' => 'Premium audio for home entertainment'],
-        ['title' => 'Air Purifiers', 'image' => 'images/categories/air-purifiers.jpg', 'href' => 'shop', 'slug' => 'air-purifiers', 'subtitle' => 'Cleaner air for healthier living'],
+        [
+            'title' => 'Barcode Label Printers',
+            'image' => 'uploads/cms/2026/06/intermec-pd42-300-dpi-0.jpg',
+            'href' => 'shop',
+            'slug' => 'barcode-label-printers',
+            'subtitle' => 'Zebra, Intermec and TSC printers for retail labels',
+        ],
+        [
+            'title' => 'Barcode Scanners',
+            'image' => 'uploads/cms/2026/06/barcode-scanner-black-copper-bc-8802-0.jpg',
+            'href' => 'shop',
+            'slug' => 'barcode-scanners',
+            'subtitle' => 'Handheld and desktop scanners for fast checkout',
+        ],
+        [
+            'title' => 'IP Cameras',
+            'image' => 'uploads/cms/2026/06/hikvision-ds-2cd1143g0e-i-0.jpg',
+            'href' => 'shop',
+            'slug' => 'ip-camera',
+            'subtitle' => 'Hikvision CCTV for shops, offices and warehouses',
+        ],
+        [
+            'title' => 'Access Control',
+            'image' => 'assets/images/hero/digitalwares-access-control.jpg',
+            'href' => 'shop',
+            'slug' => 'time-attendance-access-control',
+            'subtitle' => 'Biometric readers, door locks and attendance devices',
+        ],
+        [
+            'title' => 'Point of Sales',
+            'image' => 'assets/images/hero/digitalwares-point-of-sales.jpg',
+            'href' => 'shop',
+            'slug' => 'point-of-sales',
+            'subtitle' => 'POS terminals, receipt printers and cash drawers',
+        ],
+        [
+            'title' => 'Time Attendance',
+            'image' => 'assets/images/hero/digitalwares-time-attendance.jpg',
+            'href' => 'shop',
+            'slug' => 'time-attendance-access-control',
+            'subtitle' => 'Fingerprint and face recognition attendance systems',
+        ],
     ],
 
     'brands' => [
@@ -260,6 +299,17 @@ return [
     ],
 
     'category_images' => [
+        'barcode-label-printers' => 'uploads/cms/2026/06/intermec-pd42-300-dpi-0.jpg',
+        'barcode-scanners' => 'uploads/cms/2026/06/barcode-scanner-black-copper-bc-8802-0.jpg',
+        'barcode-labels' => 'uploads/cms/2026/06/barcode-label-110mm-76mm-43-0.jpg',
+        'ip-camera' => 'uploads/cms/2026/06/hikvision-ds-2cd1143g0e-i-0.jpg',
+        'time-attendance-access-control' => 'assets/images/hero/digitalwares-access-control.jpg',
+        'time-attendance' => 'assets/images/hero/digitalwares-time-attendance.jpg',
+        'point-of-sales' => 'assets/images/hero/digitalwares-point-of-sales.jpg',
+        'thermal-receipt-printers' => 'uploads/cms/2026/06/bc-100-ac-mini-pos-thermal-receipt-printer-0.jpg',
+        'cash-drawer' => 'uploads/cms/2026/06/cash-drawer-flip-top-bc303iip-0.jpg',
+        'rfid' => 'uploads/cms/2026/06/zebra-rfd-8500-rfid-reader-0.jpg',
+        'biometrics' => 'uploads/cms/2026/06/secugen-hamster-pro-20-0.jpg',
         'led-tvs' => 'images/categories/led-tvs.jpg',
         'sound-bars' => 'images/categories/sound-bars.jpg',
         'air-purifiers' => 'images/categories/air-purifiers.jpg',

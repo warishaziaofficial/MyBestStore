@@ -42,7 +42,7 @@
     <div class="mbs-container">
         @include('components.section-header', [
             'title' => 'Featured Category Banners',
-            'subtitle' => 'Explore our most popular electronics collections',
+            'subtitle' => 'Explore POS, barcode, security and access control collections',
             'viewAllHref' => route('shop'),
         ])
         <div class="mbs-category-banner-grid">

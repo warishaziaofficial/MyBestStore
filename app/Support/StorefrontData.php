@@ -23,6 +23,7 @@ use Cms\Models\StaticPage;
 use Cms\Models\Testimonial;
 use Cms\Models\TrustItem;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class StorefrontData
 {
@@ -413,7 +414,7 @@ class StorefrontData
 
         return array_values(array_map(function (array $cat) use ($localMap) {
             $slug = $cat['slug'] ?? $cat['id'] ?? '';
-            $image = $localMap[$slug] ?? $cat['image'] ?? 'placeholder-product.svg';
+            $image = self::categoryImageForSlug($slug, $localMap[$slug] ?? $cat['image'] ?? null);
 
             return [
                 'id' => $cat['id'] ?? $slug,
@@ -425,6 +426,57 @@ class StorefrontData
                 'description' => $cat['description'] ?? 'Explore premium products in this category.',
             ];
         }, $items));
+    }
+
+    public static function categoryBanners(): array
+    {
+        return array_map(function (array $banner): array {
+            $slug = (string) ($banner['slug'] ?? '');
+            if ($slug !== '') {
+                $banner['image'] = self::categoryImageForSlug($slug, $banner['image'] ?? null);
+            }
+
+            return $banner;
+        }, config('storefront.category_banners', []));
+    }
+
+    private static function isPlaceholderImage(?string $image): bool
+    {
+        if ($image === null || trim($image) === '') {
+            return true;
+        }
+
+        return str_contains(strtolower($image), 'placeholder');
+    }
+
+    private static function categoryImageForSlug(string $slug, ?string $fallback = null): string
+    {
+        $localMap = config('storefront.category_images', []);
+        $mapped = $localMap[$slug] ?? null;
+
+        if (! self::isPlaceholderImage($mapped)) {
+            return (string) $mapped;
+        }
+
+        $tile = collect(config('storefront.premium_category_tiles', []))->firstWhere('category', $slug);
+        if ($tile && ! empty($tile['product'])) {
+            $product = self::findBySlug((string) $tile['product']);
+            if ($product && ! empty($product['image'])) {
+                return (string) $product['image'];
+            }
+        }
+
+        foreach (self::allProducts() as $product) {
+            if (($product['category'] ?? '') === $slug && ! empty($product['image'])) {
+                return (string) $product['image'];
+            }
+        }
+
+        if (! self::isPlaceholderImage($fallback)) {
+            return (string) $fallback;
+        }
+
+        return 'placeholder-product.svg';
     }
 
     public static function exploreCategories(): array
@@ -842,66 +894,139 @@ class StorefrontData
             }
         }
 
+        $fromProducts = self::blogPostsFromProducts();
+        if ($fromProducts !== []) {
+            return $fromProducts;
+        }
+
         if (! self::useContentFallback() && ! self::useThemeDefaults()) {
             return [];
         }
 
+        return [];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private static function blogPostsFromProducts(): array
+    {
+        $products = self::allProducts();
+        if ($products === []) {
+            return [];
+        }
+
+        $byCategory = [];
+        $posts = [];
+        $preferredSlugs = collect(config('storefront.premium_category_tiles', []))
+            ->pluck('product')
+            ->filter()
+            ->values()
+            ->all();
+
+        foreach ($preferredSlugs as $slug) {
+            $product = collect($products)->firstWhere('slug', $slug);
+            if (! $product) {
+                continue;
+            }
+
+            $category = (string) ($product['category'] ?? '');
+            if ($category === '' || isset($byCategory[$category])) {
+                continue;
+            }
+
+            $byCategory[$category] = true;
+            $posts[] = self::mapProductToBlogPost($product, count($posts));
+        }
+
+        foreach ($products as $product) {
+            if (count($posts) >= 6) {
+                break;
+            }
+
+            $category = (string) ($product['category'] ?? '');
+            if ($category === '' || isset($byCategory[$category])) {
+                continue;
+            }
+
+            $byCategory[$category] = true;
+            $posts[] = self::mapProductToBlogPost($product, count($posts));
+        }
+
+        return $posts;
+    }
+
+    /**
+     * @param  array<string, mixed>  $product
+     * @return array<string, mixed>
+     */
+    private static function mapProductToBlogPost(array $product, int $index): array
+    {
+        $name = (string) ($product['name'] ?? 'Product');
+        $slug = (string) ($product['slug'] ?? '');
+        $categorySlug = (string) ($product['category'] ?? '');
+        $categoryName = filled($product['sub_category'] ?? null)
+            ? (string) $product['sub_category']
+            : self::categoryLabel($categorySlug);
+
         return [
-            [
-                'title' => 'How to Choose the Right LED TV for Your Home',
-                'slug' => 'how-to-choose-led-tv',
-                'date' => 'June 12, 2026',
-                'category' => 'Electronics',
-                'excerpt' => 'Screen size, resolution, smart features and warranty explained for Pakistani homes.',
-                'image' => 'images/blog/qled-tv-guide.jpg',
-                'author' => 'DigitalWares Team',
-            ],
-            [
-                'title' => 'Best Sound Bars for Home Entertainment',
-                'slug' => 'best-soundbars',
-                'date' => 'June 10, 2026',
-                'category' => 'Audio & Speakers',
-                'excerpt' => 'Top picks for clear vocals, deep bass and cinematic sound in any room.',
-                'image' => 'images/blog/home-audio.jpg',
-                'author' => 'DigitalWares Team',
-            ],
-            [
-                'title' => 'Air Purifier Buying Guide for Pakistani Homes',
-                'slug' => 'air-purifier-buying-guide',
-                'date' => 'June 8, 2026',
-                'category' => 'Home Appliances',
-                'excerpt' => 'CADR ratings, HEPA filters and room-size recommendations explained.',
-                'image' => 'images/blog/new-arrivals.jpg',
-                'author' => 'DigitalWares Team',
-            ],
-            [
-                'title' => 'How to Build a Home Theater Setup',
-                'slug' => 'home-theater-setup',
-                'date' => 'June 5, 2026',
-                'category' => 'Buying Guides',
-                'excerpt' => 'Speakers, AV receivers, seating and room layout tips for cinema at home.',
-                'image' => 'banners/home-entertainment.jpg',
-                'author' => 'DigitalWares Team',
-            ],
-            [
-                'title' => 'Vinyl Records and Audio Accessories Guide',
-                'slug' => 'vinyl-guide',
-                'date' => 'June 3, 2026',
-                'category' => 'Books & Media',
-                'excerpt' => 'Turntables, cartridges and LP care essentials for collectors.',
-                'image' => 'images/categories/lp-records.jpg',
-                'author' => 'DigitalWares Team',
-            ],
-            [
-                'title' => 'Tips to Maintain Your Electronics',
-                'slug' => 'maintenance-tips',
-                'date' => 'June 1, 2026',
-                'category' => 'Product Tips',
-                'excerpt' => 'Simple care routines to extend the life of your devices.',
-                'image' => 'banners/smart-home.jpg',
-                'author' => 'DigitalWares Team',
-            ],
+            'title' => Str::limit($name, 58).' — Buying Guide',
+            'slug' => 'guide-'.$slug,
+            'date' => now()->subDays($index * 2)->format('F j, Y'),
+            'category' => $categoryName,
+            'category_slug' => $categorySlug,
+            'excerpt' => Mbs::productShortDescription($product['description'] ?? null, 160),
+            'body' => null,
+            'image' => $product['image'] ?? 'placeholder-product.svg',
+            'author' => Mbs::storeName().' Team',
+            'product_slug' => $slug,
+            'product_name' => $name,
         ];
+    }
+
+    /**
+     * @return array<int, array{label: string, slug: string}>
+     */
+    private static function blogCategoriesFromProducts(): array
+    {
+        return collect(self::blogPostsFromProducts())
+            ->map(fn (array $post) => [
+                'label' => (string) ($post['category'] ?? 'Products'),
+                'slug' => (string) ($post['category_slug'] ?? Str::slug((string) ($post['category'] ?? 'products'))),
+            ])
+            ->unique('slug')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private static function blogTagsFromProducts(): array
+    {
+        $knownBrands = [
+            'Zebra', 'Hikvision', 'ZKTeco', 'Epson', 'Intermec', 'SecuGen', 'Symbol',
+            'TSC', 'Suprema', 'Motorola', 'HP', 'Dell', 'Posiflex', 'Black Copper',
+        ];
+        $tags = [
+            'POS', 'Barcode Scanner', 'Label Printer', 'Access Control', 'IP Camera',
+            'Biometric', 'Thermal Printer', 'RFID', 'Time Attendance',
+        ];
+
+        foreach (self::allProducts() as $product) {
+            $name = (string) ($product['name'] ?? '');
+            foreach ($knownBrands as $brand) {
+                if (stripos($name, $brand) !== false) {
+                    $tags[] = $brand;
+                }
+            }
+
+            if (filled($product['brand'] ?? null)) {
+                $tags[] = (string) $product['brand'];
+            }
+        }
+
+        return array_values(array_unique(array_filter($tags)));
     }
 
     public static function blogCategories(): array
@@ -921,13 +1046,17 @@ class StorefrontData
             return [];
         }
 
+        $fromProducts = self::blogCategoriesFromProducts();
+        if ($fromProducts !== []) {
+            return $fromProducts;
+        }
+
         return [
             ['label' => 'Buying Guides', 'slug' => 'buying-guides'],
-            ['label' => 'Electronics', 'slug' => 'electronics'],
-            ['label' => 'Audio & Speakers', 'slug' => 'audio-speakers'],
-            ['label' => 'Home Appliances', 'slug' => 'home-appliances'],
-            ['label' => 'Books & Media', 'slug' => 'books-media'],
-            ['label' => 'Deals & Offers', 'slug' => 'deals-offers'],
+            ['label' => 'Point of Sales', 'slug' => 'point-of-sales'],
+            ['label' => 'Barcode Scanners', 'slug' => 'barcode-scanners'],
+            ['label' => 'Access Control', 'slug' => 'time-attendance-access-control'],
+            ['label' => 'IP Camera', 'slug' => 'ip-camera'],
             ['label' => 'Product Tips', 'slug' => 'product-tips'],
         ];
     }
@@ -943,7 +1072,12 @@ class StorefrontData
         }
 
         if (self::useContentFallback() || self::useThemeDefaults()) {
-            return ['LED TV', 'Soundbar', 'Speaker', 'Air Purifier', 'Home Theater', 'Vinyl', 'Accessories'];
+            $fromProducts = self::blogTagsFromProducts();
+            if ($fromProducts !== []) {
+                return array_slice($fromProducts, 0, 12);
+            }
+
+            return ['POS', 'Barcode Scanner', 'Label Printer', 'Access Control', 'IP Camera', 'Biometric'];
         }
 
         return [];
@@ -1397,7 +1531,7 @@ class StorefrontData
             'contactCards' => self::contactCards(),
             'contactMap' => self::contactMap(),
             'footerSettings' => self::footerSettings(),
-            'categoryBanners' => config('storefront.category_banners', []),
+            'categoryBanners' => self::categoryBanners(),
         ];
     }
 }

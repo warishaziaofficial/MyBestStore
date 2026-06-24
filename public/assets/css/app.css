@@ -2539,9 +2539,11 @@ img {
 
 .mbs-blog-card-media {
     position: relative;
+    display: block;
     height: 12rem;
     overflow: hidden;
     background: var(--secondary);
+    text-decoration: none;
 }
 
 @media (min-width: 640px) {

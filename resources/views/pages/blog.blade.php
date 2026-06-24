@@ -5,7 +5,7 @@
 @section('content')
 @include('components.page-hero', [
     'title' => 'Guides, Tips & News',
-    'description' => 'Expert buying guides, product tips and the latest from DigitalWares.',
+    'description' => 'Product buying guides for POS systems, barcode hardware, access control, CCTV and more.',
 ])
 
 <section class="bg-secondary py-10">

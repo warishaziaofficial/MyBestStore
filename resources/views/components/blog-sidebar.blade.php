@@ -11,7 +11,7 @@
             <h3 class="text-sm font-bold uppercase tracking-wide text-navy">Categories</h3>
             <ul class="mt-3 space-y-2.5 text-sm text-muted">
                 @foreach ($blogCategories as $category)
-                    <li><a href="{{ route('blog') }}" class="font-medium hover:text-primary">{{ $category['label'] }}</a></li>
+                    <li><a href="{{ route('shop', ['category' => $category['slug']]) }}" class="font-medium hover:text-primary">{{ $category['label'] }}</a></li>
                 @endforeach
             </ul>
         </div>
@@ -27,8 +27,13 @@
             <h3 class="text-sm font-bold uppercase tracking-wide text-navy">Recent Posts</h3>
             <ul class="mt-3 space-y-3 text-sm">
                 @foreach (array_slice($posts, 0, 4) as $post)
+                    @php
+                        $recentHref = ! empty($post['product_slug'])
+                            ? route('product.show', $post['product_slug'])
+                            : route('blog').(! empty($post['slug']) ? '#post-'.$post['slug'] : '');
+                    @endphp
                     <li>
-                        <a href="{{ route('blog') }}" class="font-semibold text-navy hover:text-primary">{{ $post['title'] }}</a>
+                        <a href="{{ $recentHref }}" class="font-semibold text-navy hover:text-primary">{{ $post['title'] }}</a>
                         <p class="text-xs text-muted">{{ $post['date'] ?? '' }}</p>
                     </li>
                 @endforeach

@@ -38,7 +38,7 @@
             <div x-show="!customer && authView === 'signin'" class="auth-modal-panel">
                 <div class="auth-modal-head">
                     <h2 class="auth-modal-title">Sign In</h2>
-                    <p class="auth-modal-subtitle">Welcome back to MyBestStore</p>
+                    <p class="auth-modal-subtitle">Welcome back to DigitalWares</p>
                 </div>
 
                 <form class="auth-modal-form" @submit="submitLogin">
@@ -102,7 +102,7 @@
             <div x-show="authView === 'register'" x-cloak class="auth-modal-panel">
                 <div class="auth-modal-head">
                     <h2 class="auth-modal-title">Create Account</h2>
-                    <p class="auth-modal-subtitle">Join MyBestStore for faster checkout and order tracking</p>
+                    <p class="auth-modal-subtitle">Join DigitalWares for faster checkout and order tracking</p>
                 </div>
 
                 <form class="auth-modal-form" @submit="submitRegister">

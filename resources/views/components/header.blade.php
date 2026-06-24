@@ -26,7 +26,7 @@
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <a href="{{ route('home') }}" class="mbs-logo-link">
-                    <img src="{{ asset('logo.png') }}" alt="MyBestStore.pk" class="mbs-logo-img">
+                    <img src="{{ asset('logo.png') }}" alt="DigitalWares.pk" class="mbs-logo-img">
                 </a>
             </div>
 

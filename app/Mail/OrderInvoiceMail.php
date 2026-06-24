@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Order;
+use App\Support\Mbs;
 use Cms\Models\Order as CmsOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -19,7 +20,7 @@ class OrderInvoiceMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your MyBestStore Order Invoice - '.$this->order->order_number,
+            subject: 'Your '.Mbs::storeName().' Order Invoice - '.$this->order->order_number,
         );
     }
 

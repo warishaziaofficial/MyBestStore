@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice {{ $order->order_number }} | MyBestStore</title>
+    <title>Invoice {{ $order->order_number }} | {{ config('storefront.store_name', 'DigitalWares') }}</title>
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}?v={{ filemtime(public_path('assets/css/app.css')) }}">
 </head>
 <body class="order-invoice-page">

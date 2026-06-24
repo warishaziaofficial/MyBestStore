@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @php use App\Support\Mbs; @endphp
 
-@section('title', 'MyBestStore | About Us')
+@section('title', 'DigitalWares | About Us')
 
 @section('content')
 <div class="about-page">
@@ -23,15 +23,15 @@
             <div class="about-intro-content">
                 <p class="about-intro-label">About Us</p>
                 <h2 class="about-intro-heading">Pakistan’s Trusted Premium Electronics Store</h2>
-                <p><strong>MyBestStore.pk</strong> is a premium ecommerce destination for electronics, audio products, smart home appliances and accessories across Pakistan.</p>
+                <p><strong>DigitalWares.pk</strong> is a premium ecommerce destination for electronics, audio products, smart home appliances and accessories across Pakistan.</p>
                 <p>We curate genuine products from leading brands — Samsung, Sony, TCL, Panasonic and more — so you can shop with confidence. Every listing is selected for quality, warranty coverage and real-world performance in Pakistani homes.</p>
-                <p>From fast nationwide delivery to flexible payments and responsive support, MyBestStore is built to make premium electronics accessible, transparent and reliable for every customer.</p>
-                <p class="about-intro-signature">MyBestStore Team</p>
+                <p>From fast nationwide delivery to flexible payments and responsive support, DigitalWares is built to make premium electronics accessible, transparent and reliable for every customer.</p>
+                <p class="about-intro-signature">DigitalWares Team</p>
             </div>
             <div class="about-intro-image">
                 <img
                     src="{{ Mbs::image('assets/images/about/about-main.jpg') }}"
-                    alt="Premium home audio and electronics at MyBestStore"
+                    alt="Premium home audio and electronics at DigitalWares"
                     loading="lazy"
                 >
             </div>
@@ -178,7 +178,7 @@
     </section>
 
     {{-- 6. Trust Strip --}}
-    <section class="about-trust-strip" aria-label="Why trust MyBestStore">
+    <section class="about-trust-strip" aria-label="Why trust DigitalWares">
         <div class="mbs-container about-trust-strip-inner">
             @php
                 $trustItems = [

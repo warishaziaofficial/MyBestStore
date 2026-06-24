@@ -18,7 +18,7 @@ return [
         'customer_order_placed' => [
             'name' => 'Customer — Order placed',
             'subject' => 'Order confirmed — {{order_number}}',
-            'body' => '<p>Hi {{customer_name}},</p><p>Thank you for shopping with MyBestStore. Your order <strong>{{order_number}}</strong> has been received.</p><p><strong>Total:</strong> Rs {{total}}<br><strong>Payment:</strong> {{payment_status}}</p><p>Track your order: <a href="{{track_url}}">{{track_url}}</a></p>',
+            'body' => '<p>Hi {{customer_name}},</p><p>Thank you for shopping with DigitalWares. Your order <strong>{{order_number}}</strong> has been received.</p><p><strong>Total:</strong> Rs {{total}}<br><strong>Payment:</strong> {{payment_status}}</p><p>Track your order: <a href="{{track_url}}">{{track_url}}</a></p>',
         ],
         'customer_order_confirmed' => [
             'name' => 'Customer — Order confirmed',
@@ -62,16 +62,16 @@ return [
         ],
         'password_reset' => [
             'name' => 'Customer — Password reset',
-            'subject' => 'Reset your MyBestStore password',
+            'subject' => 'Reset your DigitalWares password',
             'body' => '<p>Reset your password using this link:</p><p><a href="{{reset_url}}">{{reset_url}}</a></p>',
         ],
     ],
 
     'sms' => [
-        'customer_order_placed' => 'MyBestStore: Order {{order_number}} received (Rs {{total}}). Track: {{track_url}}',
-        'customer_order_shipped' => 'MyBestStore: Order {{order_number}} shipped via {{courier_name}}. Tracking: {{tracking_number}}',
-        'customer_order_delivered' => 'MyBestStore: Order {{order_number}} delivered. Thank you!',
-        'customer_order_cancelled' => 'MyBestStore: Order {{order_number}} was cancelled.',
+        'customer_order_placed' => 'DigitalWares: Order {{order_number}} received (Rs {{total}}). Track: {{track_url}}',
+        'customer_order_shipped' => 'DigitalWares: Order {{order_number}} shipped via {{courier_name}}. Tracking: {{tracking_number}}',
+        'customer_order_delivered' => 'DigitalWares: Order {{order_number}} delivered. Thank you!',
+        'customer_order_cancelled' => 'DigitalWares: Order {{order_number}} was cancelled.',
         'admin_new_order' => 'New order {{order_number}} — {{customer_name}} — Rs {{total}}',
         'admin_order_shipped' => 'Shipped {{order_number}} — {{courier_name}} {{tracking_number}}',
     ],

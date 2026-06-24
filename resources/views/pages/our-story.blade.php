@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @php use App\Support\Mbs; @endphp
 
-@section('title', 'MyBestStore | Our Story')
+@section('title', 'DigitalWares | Our Story')
 
 @section('content')
 <div class="story-page">
@@ -23,14 +23,14 @@
             <div class="story-intro-image">
                 <img
                     src="{{ Mbs::image('assets/images/story/story-intro.jpg') }}"
-                    alt="MyBestStore journey in premium electronics"
+                    alt="DigitalWares journey in premium electronics"
                     loading="lazy"
                 >
             </div>
             <div class="story-intro-content">
                 <p class="story-intro-label">Our Journey</p>
                 <h2 class="story-intro-heading">Building a Better Electronics Shopping Experience</h2>
-                <p><strong>MyBestStore.pk</strong> was created with a simple goal: to make premium electronics, audio products, smart home appliances and accessories easier to discover, compare and buy across Pakistan.</p>
+                <p><strong>DigitalWares.pk</strong> was created with a simple goal: to make premium electronics, audio products, smart home appliances and accessories easier to discover, compare and buy across Pakistan.</p>
                 <p>We built a platform where customers could trust what they see — genuine brands, clear pricing, and detailed product information that helps you choose confidently before checkout.</p>
                 <p>From responsive customer support to nationwide delivery and official warranty guidance, every part of our journey has been shaped by listening to shoppers who wanted a better way to buy electronics online.</p>
                 <p>Today, we continue expanding our collections while staying focused on quality products, honest recommendations, and a shopping experience that feels premium from the first click to delivery at your door.</p>
@@ -43,7 +43,7 @@
         <div class="mbs-container">
             <header class="story-section-header">
                 <p class="story-section-label">Milestones</p>
-                <h2 class="story-section-title">The MyBestStore Journey</h2>
+                <h2 class="story-section-title">The DigitalWares Journey</h2>
             </header>
 
             <ol class="story-timeline-list">
@@ -70,7 +70,7 @@
                         [
                             'year' => '2026',
                             'title' => 'Premium Ecommerce Platform',
-                            'text' => 'MyBestStore is growing into a complete electronics shopping destination.',
+                            'text' => 'DigitalWares is growing into a complete electronics shopping destination.',
                             'icon' => 'rocket',
                         ],
                     ];

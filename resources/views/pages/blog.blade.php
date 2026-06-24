@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | Blog')
+@section('title', 'DigitalWares | Blog')
 
 @section('content')
 @include('components.page-hero', [
     'title' => 'Guides, Tips & News',
-    'description' => 'Expert buying guides, product tips and the latest from MyBestStore.',
+    'description' => 'Expert buying guides, product tips and the latest from DigitalWares.',
 ])
 
 <section class="bg-secondary py-10">

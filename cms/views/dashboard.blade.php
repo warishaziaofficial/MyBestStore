@@ -58,8 +58,8 @@
 </div>
 
 <div class="sf-panel sf-welcome">
-    <img src="{{ $cmsLogoDarkUrl ?? asset('assets/cms/images/mybeststore-logo-dark.svg') }}" alt="MyBestStore" class="sf-welcome-logo">
-    <h2>Welcome to MyBestStore Admin</h2>
+    <img src="{{ $cmsLogoDarkUrl ?? asset('assets/cms/images/mybeststore-logo-dark.svg') }}" alt="DigitalWares" class="sf-welcome-logo">
+    <h2>Welcome to DigitalWares Admin</h2>
     <p>This is your centralized admin dashboard. Here you can:</p>
     <ul>
         <li>Manage your product catalog — add, edit and delete products</li>

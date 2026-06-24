@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @php use App\Support\Mbs; @endphp
 
-@section('title', 'MyBestStore | Contact')
+@section('title', 'DigitalWares | Contact')
 
 @section('content')
 @include('components.page-hero', [
@@ -40,7 +40,7 @@
 
 <section class="mbs-trust-section mbs-page-section">
     <div class="mbs-container">
-        @include('components.section-header', ['title' => 'MyBestStore Support', 'subtitle' => 'Reach the right team for your request'])
+        @include('components.section-header', ['title' => 'DigitalWares Support', 'subtitle' => 'Reach the right team for your request'])
         <div class="home-section-inner grid gap-5 md:grid-cols-3">
             @foreach ($contactCards as $card)
                 <div class="mbs-support-card">
@@ -67,7 +67,7 @@
                     allowfullscreen
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
-                    title="MyBestStore location on Google Maps"
+                    title="DigitalWares location on Google Maps"
                 ></iframe>
             @else
                 <div class="mbs-map-placeholder">Map placeholder — connect Google Maps via CMS later</div>

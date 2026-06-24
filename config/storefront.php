@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'store_name' => 'DigitalWares',
+    'store_domain' => 'digitalwares.pk',
+
     'allow_dev_fallback' => env('STOREFRONT_DEV_FALLBACK', false),
     'use_theme_defaults' => env('STOREFRONT_THEME_DEFAULTS', true),
 
@@ -11,6 +14,13 @@ return [
         ['label' => 'Categories', 'href' => 'categories', 'route' => true],
         ['label' => 'Blog', 'href' => 'blog', 'route' => true],
         ['label' => 'Contact', 'href' => 'contact', 'route' => true],
+    ],
+
+    'premium_category_tiles' => [
+        ['category' => 'barcode-label-printers', 'product' => 'intermec-pd42-300-dpi'],
+        ['category' => 'barcode-scanners', 'product' => 'barcode-scanner-black-copper-bc-8802'],
+        ['category' => 'ip-camera', 'product' => 'hikvision-ds-2cd1143g0e-i'],
+        ['category' => 'time-attendance-access-control', 'product' => 'zkteco-fr1200-access-control'],
     ],
 
     'premium_categories' => [
@@ -140,38 +150,56 @@ return [
         ],
     ],
 
+    'new_arrival_slugs' => [
+        'dell-e7270',
+        'zkteco-k40',
+        'tsc-alpha-3r',
+        'barcode-label-110mm-153mm-46',
+    ],
+
+    'best_selling_slugs' => [
+        'zebra-gk420t-label-printer',
+        'hikvision-ds-2cd1043g0e-i',
+        'symbol-li4278-wireless-barcode-scanner-usb',
+        'hp-810-g2-revolve',
+    ],
+
+    'special_offers_slugs' => [
+        'zebra-gk420t-label-printer',
+        'symbol-li4278-wireless-barcode-scanner-usb',
+        'hikvision-ds-2cd1043g0e-i',
+        'zkteco-k40',
+        'hp-810-g2-revolve',
+        'dell-e7270',
+    ],
+
+    'featured_collection_slugs' => [
+        'zebra-zt410-barcode-label-printer',
+        'epson-tm-t88v-thermal-receipt-printer-usb',
+        'suprema-biomini-plus-2',
+        'digital-persona-biometric-fingerprint-reader-uru-4000b',
+    ],
+
     'featured_collections' => [
         [
-            'title' => 'Home Entertainment Setup',
-            'image' => 'banners/audio-entertainment.jpg',
-            'category' => 'home-theater',
+            'title' => 'Zebra ZT410 Barcode Label Printer',
+            'image' => 'uploads/cms/2026/06/zebra-zt410-barcode-label-printer-0.jpg',
+            'slug' => 'zebra-zt410-barcode-label-printer',
         ],
         [
-            'title' => 'Smart Home Essentials',
-            'image' => 'banners/smart-home.jpg',
-            'category' => 'air-purifiers',
+            'title' => 'Epson TM-T88V Thermal Receipt Printer',
+            'image' => 'uploads/cms/2026/06/epson-tm-t88v-thermal-receipt-printer-usb-0.jpg',
+            'slug' => 'epson-tm-t88v-thermal-receipt-printer-usb',
         ],
         [
-            'title' => 'Premium Audio Collection',
-            'image' => 'assets/images/offers/offer-headphones.jpg',
-            'category' => 'sound-bars',
+            'title' => 'Suprema BioMini Plus 2',
+            'image' => 'uploads/cms/2026/06/suprema-biomini-plus-2-0.jpg',
+            'slug' => 'suprema-biomini-plus-2',
         ],
         [
-            'title' => 'Work & Gaming Accessories',
-            'image' => 'assets/images/feature-carousel/accessories.jpg',
-            'category' => 'accessories',
-        ],
-        [
-            'title' => 'Samsung Neo QLED TV',
-            'image' => 'uploads/cms/mega-menu/2026/06/samsung-neo-qled-4k-smart-tv.jpg',
-            'slug' => 'samsung-neo-qled-4k-smart-tv',
-            'price' => 289999,
-        ],
-        [
-            'title' => 'Sony Wireless Headphones',
-            'image' => 'uploads/cms/mega-menu/2026/06/sony-wireless-noise-cancelling-headphones.jpg',
-            'slug' => 'sony-wireless-noise-cancelling-headphones',
-            'price' => 45999,
+            'title' => 'Digital Persona URU 4000B Fingerprint Reader',
+            'image' => 'uploads/cms/2026/06/digital-persona-biometric-fingerprint-reader-uru-4000b-0.jpg',
+            'slug' => 'digital-persona-biometric-fingerprint-reader-uru-4000b',
         ],
     ],
 
@@ -188,6 +216,7 @@ return [
         ['id' => 'tcl', 'name' => 'TCL', 'logo' => 'assets/images/brands/tcl.svg'],
         ['id' => 'denon', 'name' => 'Denon', 'logo' => 'assets/images/brands/denon.svg'],
         ['id' => 'pioneer', 'name' => 'Pioneer', 'logo' => 'assets/images/brands/pioneer.svg'],
+        ['id' => 'ideal', 'name' => 'Ideal', 'logo' => 'assets/images/brands/ideal.png'],
     ],
 
     'ai_features' => [
@@ -214,8 +243,8 @@ return [
 
     'contact_cards' => [
         ['title' => 'Customer Support', 'value' => '+92 300 1234567', 'description' => 'Mon–Sat, 10am–8pm'],
-        ['title' => 'Orders & Delivery', 'value' => 'orders@mybeststore.pk', 'description' => 'Track orders and shipping updates'],
-        ['title' => 'Business Inquiries', 'value' => 'business@mybeststore.pk', 'description' => 'Wholesale and corporate sales'],
+        ['title' => 'Orders & Delivery', 'value' => 'orders@digitalwares.pk', 'description' => 'Track orders and shipping updates'],
+        ['title' => 'Business Inquiries', 'value' => 'info@digitalwares.pk', 'description' => 'Wholesale and corporate sales'],
     ],
 
     /*
@@ -225,9 +254,9 @@ return [
     'contact_map' => [
         'title' => 'Find Us on the Map',
         'subtitle' => 'Plan your visit or get directions to our store',
-        'address' => 'Karachi, Sindh, Pakistan',
-        'embed_url' => 'https://maps.google.com/maps?q=Karachi,+Sindh,+Pakistan&hl=en&z=13&output=embed',
-        'maps_link' => 'https://www.google.com/maps/search/?api=1&query=Karachi,+Sindh,+Pakistan',
+        'address' => '3rd Galleria Rex City, Faisalabad, Pakistan',
+        'embed_url' => 'https://maps.google.com/maps?q=Galleria+Rex+City,+Faisalabad,+Pakistan&hl=en&z=15&output=embed',
+        'maps_link' => 'https://www.google.com/maps/search/?api=1&query=Galleria+Rex+City,+Faisalabad,+Pakistan',
     ],
 
     'category_images' => [

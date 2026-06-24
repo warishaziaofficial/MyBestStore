@@ -5,7 +5,7 @@
     $galleryUrls = $galleryUrls ?? [];
 @endphp
 
-@section('title', 'MyBestStore | '.$product['name'])
+@section('title', Mbs::storeName().' | '.$product['name'])
 
 @section('content')
 @include('components.page-hero', [
@@ -176,7 +176,14 @@
                     <button type="button" :class="{ 'is-active': activeTab === 'reviews' }" @click="activeTab = 'reviews'">Reviews ({{ $product['review_count'] }})</button>
                 </div>
                 <div class="mbs-product-detail-tab-panel" x-show="activeTab === 'description'">
-                    <p>{{ $product['description'] }}</p>
+                    @php $productDescriptionHtml = Mbs::sanitizeProductHtml($product['description'] ?? ''); @endphp
+                    @if ($productDescriptionHtml !== '')
+                        <div class="mbs-product-description">
+                            {!! $productDescriptionHtml !!}
+                        </div>
+                    @else
+                        <p class="mbs-product-description-empty">Detailed description will be available soon. Contact us for specifications and pricing.</p>
+                    @endif
                 </div>
                 <div class="mbs-product-detail-tab-panel" x-show="activeTab === 'specifications'" x-cloak>
                     <ul class="mbs-product-detail-specs">

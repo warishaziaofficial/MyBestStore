@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | New Arrivals')
+@section('title', 'DigitalWares | New Arrivals')
 
 @section('content')
 @include('components.page-hero', [
     'title' => 'New Arrivals',
-    'description' => 'Discover the latest products recently added to MyBestStore.',
+    'description' => 'Discover the latest products recently added to DigitalWares.',
 ])
 
 @include('components.shop-catalog', [

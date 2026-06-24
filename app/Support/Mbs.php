@@ -4,9 +4,55 @@ namespace App\Support;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Str;
 
 class Mbs
 {
+    public static function storeName(): string
+    {
+        return (string) config('storefront.store_name', 'DigitalWares');
+    }
+
+    public static function storeDomain(): string
+    {
+        return (string) config('storefront.store_domain', 'digitalwares.pk');
+    }
+
+    public static function storeLabel(): string
+    {
+        return self::storeName().'.'.self::storeDomain();
+    }
+
+    public static function sanitizeProductHtml(?string $html): string
+    {
+        if ($html === null || trim($html) === '') {
+            return '';
+        }
+
+        $clean = html_entity_decode($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $clean = preg_replace('/<(script|iframe|style|form|input|textarea|select|button|object|embed|link|meta)[^>]*>.*?<\/\1>/is', '', $clean) ?? $clean;
+        $clean = preg_replace('/<(script|iframe|style|form|input|textarea|select|button|object|embed|link|meta)\b[^>]*\/?>/i', '', $clean) ?? $clean;
+
+        $allowed = '<p><br><strong><b><ul><ol><li><span>';
+        $clean = strip_tags($clean, $allowed);
+        $clean = preg_replace('/\s+(on\w+|style|class|id)\s*=\s*("([^"]*)"|\'([^\']*)\'|[^\s>]+)/i', '', $clean) ?? $clean;
+        $clean = preg_replace('/<(p|span|strong|b|ul|ol|li)(\s[^>]*)?>/i', '<$1>', $clean) ?? $clean;
+        $clean = preg_replace('/<p>\s*<\/p>/i', '', $clean) ?? $clean;
+        $clean = preg_replace('/(\s*<br\s*\/?>\s*){3,}/i', '<br><br>', $clean) ?? $clean;
+
+        return trim($clean);
+    }
+
+    public static function productShortDescription(?string $html, int $limit = 220): string
+    {
+        $plain = trim(preg_replace('/\s+/u', ' ', strip_tags(self::sanitizeProductHtml($html))) ?? '');
+
+        if ($plain === '') {
+            return 'Premium digital hardware with official warranty and fast delivery across Pakistan.';
+        }
+
+        return Str::limit($plain, $limit);
+    }
     public static function image(?string $path): string
     {
         if (empty($path)) {

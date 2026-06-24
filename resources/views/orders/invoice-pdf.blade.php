@@ -5,39 +5,39 @@
     <title>Invoice {{ $order->order_number }}</title>
     <style>
         * { box-sizing: border-box; }
-        body { margin: 0; padding: 24px; font-family: DejaVu Sans, Arial, sans-serif; color: #082b4f; background: #ffffff; font-size: 12px; }
-        .sheet { border: 1px solid #cfe3f8; border-radius: 8px; padding: 24px; }
-        .header { display: table; width: 100%; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #cfe3f8; }
+        body { margin: 0; padding: 24px; font-family: DejaVu Sans, Arial, sans-serif; color: #0f172a; background: #ffffff; font-size: 12px; }
+        .sheet { border: 1px solid #fed7aa; border-radius: 8px; padding: 24px; }
+        .header { display: table; width: 100%; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #fed7aa; }
         .header-left, .header-right { display: table-cell; vertical-align: top; }
         .header-right { text-align: right; width: 45%; }
         .logo { max-width: 150px; height: auto; }
-        .logo-text { margin: 0; font-size: 18px; font-weight: 700; color: #005aa7; }
-        .kicker { margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #005aa7; }
-        .title { margin: 0 0 6px; font-size: 18px; color: #082b4f; }
-        .date { margin: 0 0 10px; color: #60758c; }
+        .logo-text { margin: 0; font-size: 18px; font-weight: 700; color: #f97316; }
+        .kicker { margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #f97316; }
+        .title { margin: 0 0 6px; font-size: 18px; color: #0f172a; }
+        .date { margin: 0 0 10px; color: #64748b; }
         .badges span { display: inline-block; margin-left: 6px; padding: 4px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; }
-        .badge-payment { background: #e8f8eb; color: #21963a; }
-        .badge-order { background: #eaf4ff; color: #005aa7; }
+        .badge-payment { background: #ecfdf3; color: #15803d; }
+        .badge-order { background: #fff7ed; color: #ea580c; }
         .invoice-scan { margin-top: 8px; text-align: right; }
         .invoice-scan-grid { display: inline-block; text-align: center; }
         .invoice-scan-qr { width: 70px; height: 70px; }
         .invoice-scan-barcode { max-width: 160px; height: 34px; display: block; margin: 4px auto 0; }
-        .invoice-scan-code { margin: 4px 0 0; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; color: #082b4f; }
+        .invoice-scan-code { margin: 4px 0 0; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; color: #0f172a; }
         .info-grid { display: table; width: 100%; margin-bottom: 18px; }
-        .info-card { display: table-cell; width: 33.33%; vertical-align: top; padding: 10px; border: 1px solid #cfe3f8; background: #f5faff; }
-        .info-card h2 { margin: 0 0 8px; font-size: 11px; color: #005aa7; text-transform: uppercase; letter-spacing: 0.04em; }
+        .info-card { display: table-cell; width: 33.33%; vertical-align: top; padding: 10px; border: 1px solid #fed7aa; background: #fffbf7; }
+        .info-card h2 { margin: 0 0 8px; font-size: 11px; color: #f97316; text-transform: uppercase; letter-spacing: 0.04em; }
         .info-card p { margin: 0 0 4px; line-height: 1.45; }
-        .info-card strong { color: #60758c; font-weight: 600; }
+        .info-card strong { color: #64748b; font-weight: 600; }
         table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-        th, td { padding: 10px 8px; border-bottom: 1px solid #eaf4ff; text-align: left; vertical-align: top; }
-        th { background: #eaf4ff; color: #082b4f; font-size: 11px; }
-        .product-name { font-weight: 600; color: #082b4f; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #ffedd5; text-align: left; vertical-align: top; }
+        th { background: #fff7ed; color: #0f172a; font-size: 11px; }
+        .product-name { font-weight: 600; color: #0f172a; }
         .summary { width: 240px; margin-left: auto; margin-top: 14px; }
         .summary div { display: table; width: 100%; padding: 4px 0; }
         .summary span, .summary strong { display: table-cell; }
         .summary strong { text-align: right; }
-        .grand { margin-top: 8px; padding-top: 8px; border-top: 1px solid #cfe3f8; font-size: 14px; font-weight: 700; color: #005aa7; }
-        .footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid #cfe3f8; text-align: center; color: #60758c; font-size: 11px; }
+        .grand { margin-top: 8px; padding-top: 8px; border-top: 1px solid #fed7aa; font-size: 14px; font-weight: 700; color: #f97316; }
+        .footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid #fed7aa; text-align: center; color: #64748b; font-size: 11px; }
     </style>
 </head>
 <body>
@@ -54,9 +54,9 @@
         <div class="header">
             <div class="header-left">
                 @if ($logoDataUri)
-                    <img src="{{ $logoDataUri }}" alt="MyBestStore.pk" class="logo">
+                    <img src="{{ $logoDataUri }}" alt="{{ Mbs::storeLabel() }}" class="logo">
                 @else
-                    <p class="logo-text">MyBestStore.pk</p>
+                    <p class="logo-text">{{ Mbs::storeLabel() }}</p>
                 @endif
             </div>
             <div class="header-right">
@@ -145,7 +145,7 @@
         </div>
 
         <div class="footer">
-            <p>Thank you for shopping with MyBestStore.pk</p>
+            <p>Thank you for shopping with {{ Mbs::storeLabel() }}</p>
             <p>{{ OrderPresenter::supportMessage() }}</p>
         </div>
     </div>

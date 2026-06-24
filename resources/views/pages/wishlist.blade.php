@@ -2,7 +2,7 @@
 
 
 
-@section('title', 'MyBestStore | Wishlist')
+@section('title', 'DigitalWares | Wishlist')
 
 
 

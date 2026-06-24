@@ -1,32 +1,34 @@
 {{-- Homepage hero showcase — resources/views/pages/home.blade.php --}}
 @php
+    use App\Support\Mbs;
+
     $heroMainSlides = [
         [
-            'image' => 'assets/images/hero/hero-main-1.jpg',
-            'alt' => 'Discover premium tech for every lifestyle',
-            'label' => 'Premium Electronics',
-            'title' => 'Discover Premium Tech For Every Lifestyle',
-            'subtitle' => 'Shop audio, smart gadgets, TVs and accessories across Pakistan.',
+            'image' => 'assets/images/hero/hero-digital-hardware-product.jpg',
+            'alt' => 'Zebra ZT410 barcode label printer',
+            'label' => 'Digitalwares Collection',
+            'title' => 'Best Digital Hardware Store in Pakistan',
+            'subtitle' => 'Point of sale, time attendance, security, networking and computer systems.',
             'button' => 'Shop Now',
-            'href' => 'shop',
+            'url' => route('shop'),
         ],
         [
-            'image' => 'assets/images/hero/hero-main-2.jpg',
-            'alt' => 'Upgrade your sound experience',
-            'label' => 'Smart Audio',
-            'title' => 'Upgrade Your Sound Experience',
-            'subtitle' => 'Explore soundbars, speakers and wireless audio collections.',
-            'button' => 'Explore Audio',
-            'href' => 'shop',
+            'image' => 'assets/images/hero/digitalwares-point-of-sales.jpg',
+            'alt' => 'Point of sales systems and POS hardware',
+            'label' => 'Point of Sales',
+            'title' => 'Complete POS Solutions',
+            'subtitle' => 'Barcode scanners, label printers, thermal printers, cash drawers and POS systems.',
+            'button' => 'Explore POS',
+            'url' => Mbs::shopCategoryUrl('point-of-sales'),
         ],
         [
-            'image' => 'assets/images/hero/hero-main-3.jpg',
-            'alt' => 'Latest smart gadgets are here',
-            'label' => 'New Arrivals',
-            'title' => 'Latest Smart Gadgets Are Here',
-            'subtitle' => 'Find trending electronics and accessories at MyBestStore.',
-            'button' => 'View New Arrivals',
-            'href' => 'new-arrivals',
+            'image' => 'assets/images/hero/digitalwares-time-attendance.jpg',
+            'alt' => 'Time attendance and access control systems',
+            'label' => 'Time Attendance',
+            'title' => 'Time Attendance & Access Control',
+            'subtitle' => 'Biometric devices, fingerprint readers, smart door locks and access terminals.',
+            'button' => 'View Collection',
+            'url' => Mbs::shopCategoryUrl('time-attendance-access-control'),
         ],
     ];
 @endphp
@@ -40,16 +42,17 @@
                         <img
                             src="{{ asset($slide['image']) }}"
                             alt="{{ $slide['alt'] }}"
-                            class="hero-slide-bg"
+                            class="hero-slide-bg{{ $index === 0 ? ' hero-slide-bg--banner' : '' }}"
                             width="1920"
                             height="1080"
                             @if ($index > 0) loading="lazy" @endif
                         >
+                        <div class="hero-overlay hero-overlay--main" aria-hidden="true"></div>
                         <div class="hero-content hero-content--main">
                             <span class="hero-label">{{ $slide['label'] }}</span>
                             <h1 class="hero-title">{{ $slide['title'] }}</h1>
                             <p class="hero-subtitle">{{ $slide['subtitle'] }}</p>
-                            <a href="{{ route($slide['href']) }}" class="hero-btn">{{ $slide['button'] }}</a>
+                            <a href="{{ $slide['url'] ?? route($slide['href'] ?? 'shop') }}" class="hero-btn">{{ $slide['button'] }}</a>
                         </div>
                     </div>
                 @endforeach
@@ -74,32 +77,34 @@
         </div>
 
         <div class="hero-side-column">
-            <a href="{{ route('new-arrivals') }}" class="hero-side-card">
+            <a href="{{ Mbs::shopCategoryUrl('time-attendance-access-control') }}" class="hero-side-card">
                 <img
-                    src="{{ asset('assets/images/hero/hero-side-1.jpg') }}"
-                    alt="Wireless earbuds"
+                    src="{{ asset('assets/images/hero/digitalwares-access-control.jpg') }}"
+                    alt="Biometric access control device"
                     class="hero-side-card-bg"
                     width="1200"
                     height="900"
                 >
+                <div class="hero-overlay hero-overlay--side" aria-hidden="true"></div>
                 <div class="hero-content hero-content--side">
-                    <span class="hero-label hero-label--accent">New Arrivals</span>
-                    <h2 class="hero-title">Wireless Earbuds</h2>
+                    <span class="hero-label hero-label--accent">Time Attendance</span>
+                    <h2 class="hero-title">Access Control</h2>
                     <span class="hero-btn hero-btn--link">Shop Now</span>
                 </div>
             </a>
 
-            <a href="{{ route('shop') }}" class="hero-side-card">
+            <a href="{{ Mbs::shopCategoryUrl('point-of-sales') }}" class="hero-side-card">
                 <img
-                    src="{{ asset('assets/images/hero/hero-side-2.jpg') }}"
-                    alt="HomePod Pro smart speaker"
+                    src="{{ asset('assets/images/hero/digitalwares-point-of-sales.jpg') }}"
+                    alt="POS terminal and receipt printer"
                     class="hero-side-card-bg"
                     width="1200"
                     height="900"
                 >
+                <div class="hero-overlay hero-overlay--side" aria-hidden="true"></div>
                 <div class="hero-content hero-content--side">
-                    <span class="hero-label hero-label--accent">Smart Audio</span>
-                    <h2 class="hero-title">HomePod Pro</h2>
+                    <span class="hero-label hero-label--accent">Point of Sales</span>
+                    <h2 class="hero-title">POS Hardware</h2>
                     <span class="hero-btn hero-btn--link">Shop Now</span>
                 </div>
             </a>

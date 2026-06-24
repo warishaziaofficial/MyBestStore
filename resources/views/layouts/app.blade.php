@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'MyBestStore | Premium Electronics')</title>
-    <meta name="description" content="@yield('meta_description', 'MyBestStore — premium electronics and home entertainment in Pakistan.')">
+    <title>@yield('title', config('storefront.store_name', 'DigitalWares').' | Premium Digital Hardware')</title>
+    <meta name="description" content="@yield('meta_description', config('storefront.store_name', 'DigitalWares').' — POS systems, barcode scanners, biometric devices and digital hardware in Pakistan.')">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,21 +17,21 @@
                 extend: {
                     colors: {
                         background: '#ffffff',
-                        foreground: '#082B4F',
+                        foreground: '#111827',
                         primary: {
-                            DEFAULT: '#005AA7',
-                            hover: '#003B73',
-                            light: '#EAF4FF',
+                            DEFAULT: '#F97316',
+                            hover: '#EA580C',
+                            light: '#FFF7ED',
                         },
                         accent: {
-                            DEFAULT: '#36B44A',
-                            light: '#E8F8EB',
+                            DEFAULT: '#F97316',
+                            light: '#FFF7ED',
                         },
-                        secondary: '#F5FAFF',
+                        secondary: '#FFFBF7',
                         card: '#ffffff',
-                        muted: '#60758C',
-                        border: '#CFE3F8',
-                        navy: '#082B4F',
+                        muted: '#64748B',
+                        border: '#FED7AA',
+                        navy: '#0F172A',
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],

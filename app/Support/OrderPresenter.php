@@ -180,9 +180,9 @@ class OrderPresenter
     public static function supportMessage(): string
     {
         $phone = config('storefront.contact_cards.0.value', '+92 300 1234567');
-        $email = config('storefront.contact_cards.1.value', 'orders@mybeststore.pk');
+        $email = config('storefront.contact_cards.1.value', 'orders@digitalwares.pk');
 
-        return "For support, contact MyBestStore support team at {$email} or {$phone}.";
+        return 'For support, contact '.Mbs::storeName()." support team at {$email} or {$phone}.";
     }
 
     /**

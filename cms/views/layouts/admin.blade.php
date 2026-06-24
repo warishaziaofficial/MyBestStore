@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'CMS') | MyBestStore</title>
+    <title>@yield('title', 'CMS') | DigitalWares</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
                 <a href="{{ route('cms.dashboard') }}" class="sf-brand">
                     <img
                         src="{{ $cmsLogoUrl }}"
-                        alt="MyBestStore"
+                        alt="DigitalWares"
                         class="sf-brand-logo @if(is_file(public_path($cmsLogoPath))) sf-brand-logo--invert @endif"
                     >
                 </a>

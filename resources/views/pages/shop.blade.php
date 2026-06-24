@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | Shop')
+@section('title', 'DigitalWares | Shop')
 
 @section('content')
 @include('components.page-hero', [

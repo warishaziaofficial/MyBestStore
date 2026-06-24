@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @php use App\Support\Mbs; @endphp
 
-@section('title', 'MyBestStore | Categories')
+@section('title', 'DigitalWares | Categories')
 
 @section('content')
 @include('components.page-hero', [

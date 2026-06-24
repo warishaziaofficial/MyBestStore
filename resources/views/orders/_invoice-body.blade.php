@@ -6,7 +6,7 @@
 <div class="order-invoice-sheet">
     <header class="order-invoice-header">
         <div class="order-invoice-brand">
-            <img src="{{ asset('logo.png') }}" alt="MyBestStore.pk" class="order-invoice-logo">
+            <img src="{{ asset('logo.png') }}" alt="{{ Mbs::storeLabel() }}" class="order-invoice-logo">
         </div>
         <div class="order-invoice-header-meta">
             <p class="order-invoice-kicker">INVOICE</p>
@@ -113,7 +113,7 @@
     </div>
 
     <footer class="order-invoice-footer">
-        <p>Thank you for shopping with MyBestStore.pk</p>
+        <p>Thank you for shopping with {{ Mbs::storeLabel() }}</p>
         <p>{{ OrderPresenter::supportMessage() }}</p>
     </footer>
 </div>

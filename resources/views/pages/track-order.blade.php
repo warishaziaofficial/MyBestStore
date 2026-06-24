@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | Track Order')
+@section('title', 'DigitalWares | Track Order')
 
 @section('content')
 <section class="track-order-page">

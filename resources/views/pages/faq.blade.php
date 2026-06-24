@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | FAQ')
+@section('title', 'DigitalWares | FAQ')
 
 @section('content')
 <x-static-page :title="$title" :description="$description ?? null">
-    <p>Find quick answers to the most common questions about shopping, delivery, payments, and support at MyBestStore.pk.</p>
+    <p>Find quick answers to the most common questions about shopping, delivery, payments, and support at DigitalWares.pk.</p>
 
     <div class="mbs-static-faq" x-data="{ open: 0 }">
         @foreach (config('storefront.faqs', []) as $index => $faq)
@@ -29,6 +29,6 @@
     </div>
 
     <h2>Still need help?</h2>
-    <p>Our support team is available Monday to Saturday. Visit the <a href="{{ route('contact') }}">Contact page</a>, call +92 300 1234567, or email <a href="mailto:orders@mybeststore.pk">orders@mybeststore.pk</a>.</p>
+    <p>Our support team is available Monday to Saturday. Visit the <a href="{{ route('contact') }}">Contact page</a>, call +92 300 1234567, or email <a href="mailto:orders@digitalwares.pk">orders@digitalwares.pk</a>.</p>
 </x-static-page>
 @endsection

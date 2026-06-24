@@ -60,7 +60,7 @@ class CustomerAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Your account has been created. Welcome to MyBestStore!',
+            'message' => 'Your account has been created. Welcome to DigitalWares!',
             'customer' => $this->customerPayload($customer),
         ]);
     }

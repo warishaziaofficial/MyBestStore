@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'CMS') | MyBestStore</title>
+    <title>@yield('title', 'CMS') | DigitalWares</title>
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}?v={{ filemtime(public_path('assets/css/app.css')) }}">
     <style>
         .cms-shell { min-height: 100vh; background: var(--secondary); }

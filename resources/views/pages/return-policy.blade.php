@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | Return Policy')
+@section('title', 'DigitalWares | Return Policy')
 
 @section('content')
 <x-static-page :title="$title" :description="$description ?? null">
-    <p>We want you to shop with confidence at MyBestStore.pk. If a product does not meet your expectations, our return policy below explains when and how returns may be accepted.</p>
+    <p>We want you to shop with confidence at DigitalWares.pk. If a product does not meet your expectations, our return policy below explains when and how returns may be accepted.</p>
 
     <h2>Return Eligibility</h2>
     <p>Returns are accepted for eligible electronics and appliances that are unused, in original packaging, and include all accessories, manuals, and warranty cards supplied with the product. Certain items such as opened software, personalised products, or hygiene-sensitive accessories may not qualify for return.</p>
@@ -17,7 +17,7 @@
 
     <h2>Return Process</h2>
     <ol>
-        <li>Contact MyBestStore support with your order number and reason for return.</li>
+        <li>Contact DigitalWares support with your order number and reason for return.</li>
         <li>Receive return approval and pickup or drop-off instructions for your city.</li>
         <li>Once the product is inspected, refunds are processed to the original payment method or as store credit where applicable.</li>
     </ol>
@@ -26,6 +26,6 @@
     <p>If you received a defective or incorrect item, we will arrange a replacement where stock is available. Please report such issues within 48 hours of delivery with photos or video where possible.</p>
 
     <h2>Need Help?</h2>
-    <p>Visit our <a href="{{ route('contact') }}">Contact page</a> or email <a href="mailto:orders@mybeststore.pk">orders@mybeststore.pk</a> to start a return request.</p>
+    <p>Visit our <a href="{{ route('contact') }}">Contact page</a> or email <a href="mailto:orders@digitalwares.pk">orders@digitalwares.pk</a> to start a return request.</p>
 </x-static-page>
 @endsection

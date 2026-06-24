@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | Privacy Policy')
+@section('title', 'DigitalWares | Privacy Policy')
 
 @section('content')
 <x-static-page :title="$title" :description="$description ?? null">
-    <p>MyBestStore.pk respects your privacy. This policy explains what information we collect, how we use it, and the choices available to you when shopping with us.</p>
+    <p>DigitalWares.pk respects your privacy. This policy explains what information we collect, how we use it, and the choices available to you when shopping with us.</p>
 
     <h2>Information We Collect</h2>
     <p>When you browse, register, or place an order, we may collect personal details such as your name, email address, phone number, billing address, delivery address, and order history. Payment details are processed securely through our payment partners and are not stored on our servers beyond what is required for transaction records.</p>
@@ -27,6 +27,6 @@
     <p>We do not sell your personal information. We may share limited data with trusted courier partners, payment gateways, and service providers strictly for order fulfilment and customer support.</p>
 
     <h2>Your Rights</h2>
-    <p>You may request access to, correction of, or deletion of your personal data by contacting our support team. For privacy-related enquiries, email <a href="mailto:orders@mybeststore.pk">orders@mybeststore.pk</a>.</p>
+    <p>You may request access to, correction of, or deletion of your personal data by contacting our support team. For privacy-related enquiries, email <a href="mailto:orders@digitalwares.pk">orders@digitalwares.pk</a>.</p>
 </x-static-page>
 @endsection

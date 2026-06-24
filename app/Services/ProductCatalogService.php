@@ -466,7 +466,7 @@ class ProductCatalogService
             'image_alt' => $product->name,
             'category' => $product->category?->slug ?? '',
             'sub_category' => $product->category?->name ?? '',
-            'brand' => $product->brand?->name ?? 'MyBestStore',
+            'brand' => $product->brand?->name ?? Mbs::storeName(),
             'description' => $product->description,
             'weight' => (float) ($product->weight ?? 0),
             'rating' => 4.5,

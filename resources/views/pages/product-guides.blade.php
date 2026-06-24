@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'MyBestStore | Product Guides')
+@section('title', 'DigitalWares | Product Guides')
 
 @section('content')
 <x-static-page :title="$title" :description="$description ?? null">
-    <p>Not sure which product fits your room, budget, or lifestyle? These quick buying guides from the MyBestStore team will help you choose with confidence.</p>
+    <p>Not sure which product fits your room, budget, or lifestyle? These quick buying guides from the DigitalWares team will help you choose with confidence.</p>
 
     <h2>LED TVs</h2>
     <p>Consider screen size based on viewing distance — larger rooms benefit from 55" and above, while bedrooms often suit 43"–50" models. Look for 4K resolution, HDR support, and smart features if you stream regularly. Check HDMI port count for soundbars, consoles, and set-top boxes.</p>

@@ -165,7 +165,7 @@ class StorefrontData
             }
         }
 
-        return 'MyBestStore';
+        return Mbs::storeName();
     }
 
     public static function findBySlug(string $slug): ?array
@@ -235,11 +235,16 @@ class StorefrontData
             $product['gallery'] = array_column($galleryImages, 'image');
         }
 
+        $rawDescription = (string) ($product['description'] ?? '');
+        $storeName = Mbs::storeName();
+
         return array_merge($product, [
             'brand' => $brand,
             'category_name' => $categoryName,
-            'short_description' => $product['description'] ?? 'Premium quality electronics with official warranty and fast delivery across Pakistan.',
-            'description' => $product['description'] ?? 'Experience premium performance and reliability with '.($product['name'] ?? 'this product').'. Ideal for modern homes across Pakistan with official warranty support and expert assistance from MyBestStore.',
+            'short_description' => Mbs::productShortDescription($rawDescription),
+            'description' => $rawDescription !== ''
+                ? $rawDescription
+                : 'Experience premium performance and reliability with '.($product['name'] ?? 'this product').'. Ideal for businesses across Pakistan with official warranty support and expert assistance from '.$storeName.'.',
             'specifications' => [
                 'Brand' => $brand,
                 'Category' => $categoryName,
@@ -449,7 +454,31 @@ class StorefrontData
                 ->all();
         }
 
-        return self::useContentFallback() ? self::exports('bestSellingProducts') : [];
+        if (! self::useContentFallback()) {
+            return [];
+        }
+
+        $items = self::exports('bestSellingProducts');
+        if (count($items)) {
+            return $items;
+        }
+
+        $slugs = config('storefront.best_selling_slugs', []);
+        if ($slugs !== []) {
+            $products = [];
+            foreach ($slugs as $slug) {
+                $product = self::findBySlug($slug);
+                if ($product) {
+                    $products[] = self::enrichProduct($product);
+                }
+            }
+
+            if (count($products)) {
+                return $products;
+            }
+        }
+
+        return array_slice(self::allProducts(), 0, 12);
     }
 
     public static function newArrivals(): array
@@ -472,8 +501,29 @@ class StorefrontData
         }
 
         $items = self::exports('newArrivalProducts');
+        if (count($items) >= 8) {
+            return $items;
+        }
 
-        return count($items) >= 8 ? $items : array_slice(self::allProducts(), 0, 12);
+        $slugs = config('storefront.new_arrival_slugs', []);
+        if ($slugs !== []) {
+            $products = [];
+            foreach ($slugs as $slug) {
+                $product = self::findBySlug($slug);
+                if ($product) {
+                    $products[] = self::enrichProduct($product);
+                }
+            }
+
+            if (count($products)) {
+                return $products;
+            }
+        }
+
+        return array_map(
+            fn (array $product) => self::enrichProduct($product),
+            array_slice(self::allProducts(), 0, 12)
+        );
     }
 
     private static function productsFromPlacement(string $placement, int $limit): array
@@ -651,6 +701,61 @@ class StorefrontData
         return count($featured) ? $featured : array_slice(self::bestSelling(), 0, 6);
     }
 
+    /**
+     * @return array<int, array{left?: array<string, mixed>, right?: array<string, mixed>}>
+     */
+    public static function specialOffersSlides(): array
+    {
+        $slugs = config('storefront.special_offers_slugs', []);
+        $products = [];
+
+        foreach ($slugs as $slug) {
+            $product = self::findBySlug($slug);
+            if ($product) {
+                $products[] = self::enrichProduct($product);
+            }
+        }
+
+        if ($products === []) {
+            return [];
+        }
+
+        $slides = [];
+        foreach (array_chunk($products, 2) as $pair) {
+            $slide = [];
+            if (isset($pair[0])) {
+                $slide['left'] = self::mapSpecialOfferBanner($pair[0]);
+            }
+            if (isset($pair[1])) {
+                $slide['right'] = self::mapSpecialOfferBanner($pair[1]);
+            }
+            if ($slide !== []) {
+                $slides[] = $slide;
+            }
+        }
+
+        return $slides;
+    }
+
+    /**
+     * @param  array<string, mixed>  $product
+     * @return array<string, mixed>
+     */
+    private static function mapSpecialOfferBanner(array $product): array
+    {
+        $price = (int) ($product['price'] ?? 0);
+        $compareAt = (int) ($product['compare_at'] ?? $product['old_price'] ?? 0);
+
+        return [
+            'title' => $product['name'] ?? 'Product',
+            'slug' => $product['slug'] ?? '',
+            'price' => $price,
+            'old_price' => $compareAt > $price ? $compareAt : 0,
+            'image' => $product['image'] ?? 'placeholder-product.svg',
+            'alt' => $product['image_alt'] ?? $product['imageAlt'] ?? ($product['name'] ?? 'Product'),
+        ];
+    }
+
     public static function showcaseProduct(): ?array
     {
         if (self::useDatabase()) {
@@ -749,7 +854,7 @@ class StorefrontData
                 'category' => 'Electronics',
                 'excerpt' => 'Screen size, resolution, smart features and warranty explained for Pakistani homes.',
                 'image' => 'images/blog/qled-tv-guide.jpg',
-                'author' => 'MyBestStore Team',
+                'author' => 'DigitalWares Team',
             ],
             [
                 'title' => 'Best Sound Bars for Home Entertainment',
@@ -758,7 +863,7 @@ class StorefrontData
                 'category' => 'Audio & Speakers',
                 'excerpt' => 'Top picks for clear vocals, deep bass and cinematic sound in any room.',
                 'image' => 'images/blog/home-audio.jpg',
-                'author' => 'MyBestStore Team',
+                'author' => 'DigitalWares Team',
             ],
             [
                 'title' => 'Air Purifier Buying Guide for Pakistani Homes',
@@ -767,7 +872,7 @@ class StorefrontData
                 'category' => 'Home Appliances',
                 'excerpt' => 'CADR ratings, HEPA filters and room-size recommendations explained.',
                 'image' => 'images/blog/new-arrivals.jpg',
-                'author' => 'MyBestStore Team',
+                'author' => 'DigitalWares Team',
             ],
             [
                 'title' => 'How to Build a Home Theater Setup',
@@ -776,7 +881,7 @@ class StorefrontData
                 'category' => 'Buying Guides',
                 'excerpt' => 'Speakers, AV receivers, seating and room layout tips for cinema at home.',
                 'image' => 'banners/home-entertainment.jpg',
-                'author' => 'MyBestStore Team',
+                'author' => 'DigitalWares Team',
             ],
             [
                 'title' => 'Vinyl Records and Audio Accessories Guide',
@@ -785,7 +890,7 @@ class StorefrontData
                 'category' => 'Books & Media',
                 'excerpt' => 'Turntables, cartridges and LP care essentials for collectors.',
                 'image' => 'images/categories/lp-records.jpg',
-                'author' => 'MyBestStore Team',
+                'author' => 'DigitalWares Team',
             ],
             [
                 'title' => 'Tips to Maintain Your Electronics',
@@ -794,7 +899,7 @@ class StorefrontData
                 'category' => 'Product Tips',
                 'excerpt' => 'Simple care routines to extend the life of your devices.',
                 'image' => 'banners/smart-home.jpg',
-                'author' => 'MyBestStore Team',
+                'author' => 'DigitalWares Team',
             ],
         ];
     }
@@ -940,6 +1045,28 @@ class StorefrontData
         }
 
         if (self::useContentFallback() || self::useThemeDefaults()) {
+            $slugs = config('storefront.featured_collection_slugs', []);
+            if ($slugs !== []) {
+                $collections = [];
+                foreach ($slugs as $slug) {
+                    $product = self::findBySlug($slug);
+                    if (! $product) {
+                        continue;
+                    }
+
+                    $product = self::enrichProduct($product);
+                    $collections[] = [
+                        'title' => $product['name'] ?? 'Product',
+                        'image' => $product['image'] ?? 'placeholder-product.svg',
+                        'slug' => $product['slug'] ?? $slug,
+                    ];
+                }
+
+                if ($collections !== []) {
+                    return $collections;
+                }
+            }
+
             return config('storefront.featured_collections', []);
         }
 
@@ -970,6 +1097,15 @@ class StorefrontData
         return [];
     }
 
+    public static function contactMap(): array
+    {
+        if (self::useContentFallback() || self::useThemeDefaults()) {
+            return config('storefront.contact_map', []);
+        }
+
+        return [];
+    }
+
     public static function footerSettings(): array
     {
         if (Schema::hasTable('FooterSettings')) {
@@ -990,10 +1126,10 @@ class StorefrontData
             if (self::useThemeDefaults()) {
                 return [
                     'tagline' => 'The premium e-commerce destination in Pakistan. Quality electronics, appliances and audio with nationwide support.',
-                    'website_url' => 'https://mybeststore.pk/',
+                    'website_url' => 'https://digitalwares.pk/',
                     'instagram_url' => null,
                     'facebook_url' => null,
-                    'copyright_text' => 'MyBestStore.pk — All rights reserved.',
+                    'copyright_text' => 'DigitalWares.pk — All rights reserved.',
                     'newsletter_heading' => 'Newsletter',
                     'newsletter_text' => 'Subscribe for special offers, new arrivals and exclusive deals.',
                 ];
@@ -1008,10 +1144,10 @@ class StorefrontData
 
         return [
             'tagline' => 'The premium e-commerce destination in Pakistan. Quality electronics, appliances and audio with nationwide support.',
-            'website_url' => 'https://mybeststore.pk/',
+            'website_url' => 'https://digitalwares.pk/',
             'instagram_url' => null,
             'facebook_url' => null,
-            'copyright_text' => 'MyBestStore.pk — All rights reserved.',
+            'copyright_text' => 'DigitalWares.pk — All rights reserved.',
             'newsletter_heading' => 'Newsletter',
             'newsletter_text' => 'Subscribe for special offers, new arrivals and exclusive deals.',
         ];
@@ -1027,11 +1163,46 @@ class StorefrontData
      */
     public static function premiumCategoryTiles(): array
     {
+        $tiles = config('storefront.premium_category_tiles', []);
+
+        if ($tiles !== [] && (self::useContentFallback() || self::useThemeDefaults())) {
+            $result = [];
+
+            foreach ($tiles as $tile) {
+                $categorySlug = (string) ($tile['category'] ?? '');
+                $productSlug = (string) ($tile['product'] ?? '');
+
+                if ($categorySlug === '') {
+                    continue;
+                }
+
+                $category = collect(self::categories())->firstWhere('slug', $categorySlug);
+                $product = $productSlug !== '' ? self::findBySlug($productSlug) : null;
+
+                if ($product) {
+                    $product = self::enrichProduct($product);
+                }
+
+                $result[] = [
+                    'name' => $category['name'] ?? self::categoryLabel($categorySlug),
+                    'image' => $product['image'] ?? ($category['image'] ?? 'placeholder-product.svg'),
+                    'slug' => $categorySlug,
+                    'href' => 'shop',
+                    'route' => true,
+                ];
+            }
+
+            if ($result !== []) {
+                return $result;
+            }
+        }
+
         return array_map(fn (array $category) => [
             'name' => $category['title'],
             'image' => $category['image'] ?? 'placeholder-product.svg',
             'href' => $category['href'] ?? 'shop',
             'route' => $category['route'] ?? true,
+            'slug' => $category['slug'] ?? null,
         ], self::premiumCategories());
     }
 
@@ -1196,6 +1367,7 @@ class StorefrontData
             'airPurifiers' => self::airPurifiers(),
             'homeTheater' => self::homeTheater(),
             'dealProducts' => self::dealProducts(),
+            'specialOffersSlides' => self::specialOffersSlides(),
             'showcaseProduct' => self::showcaseProduct(),
             'showcaseGallery' => self::showcaseGallery(),
             'featuredCollections' => self::featuredCollections(),
@@ -1223,6 +1395,7 @@ class StorefrontData
             'navigation' => config('storefront.navigation', []),
             'megaMenu' => self::megaMenu(),
             'contactCards' => self::contactCards(),
+            'contactMap' => self::contactMap(),
             'footerSettings' => self::footerSettings(),
             'categoryBanners' => config('storefront.category_banners', []),
         ];

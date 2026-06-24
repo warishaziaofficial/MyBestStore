@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @php use App\Support\Mbs; @endphp
 
-@section('title', 'MyBestStore | Premium Electronics')
+@section('title', 'DigitalWares | Premium Electronics')
 
 @section('content')
 @include('components.hero-grid')
@@ -10,7 +10,7 @@
 <section class="home-section bg-gradient-to-b from-primary-light/50 to-white">
     <div class="mbs-container">
         @include('components.section-header', ['title' => 'Shop By Brand', 'subtitle' => 'Explore products from trusted brands', 'viewAllHref' => route('categories')])
-        <div class="home-section-inner grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 max-w-6xl mx-auto">
+        <div class="home-section-inner grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7 max-w-6xl mx-auto">
             @foreach ($brands as $brand)
                 <a href="{{ route('shop', ['brand' => $brand['name']]) }}" class="mbs-brand-card" title="{{ $brand['name'] }}">
                     <img
@@ -26,64 +26,12 @@
 </section>
 
 {{-- Special Offers — premium deals carousel --}}
-@php
-    $dealsSlides = [
-        [
-            'left' => [
-                'title' => 'Wireless Gaming Headset',
-                'price' => 18000,
-                'old_price' => 25000,
-                'image' => 'assets/images/offers/offer-headphones.jpg',
-                'alt' => 'Wireless gaming headset premium audio',
-            ],
-            'right' => [
-                'title' => 'Premium Audio Accessories',
-                'price' => 55000,
-                'old_price' => 68000,
-                'image' => 'assets/images/offers/offer-accessories.jpg',
-                'alt' => 'Premium audio accessories bundle',
-            ],
-        ],
-        [
-            'left' => [
-                'title' => 'True Wireless Earbuds Pro',
-                'price' => 8500,
-                'old_price' => 12000,
-                'image' => 'assets/images/offers/offer-earbuds-pro.jpg',
-                'alt' => 'True wireless earbuds pro',
-            ],
-            'right' => [
-                'title' => 'JBL Bluetooth Speaker',
-                'price' => 72000,
-                'old_price' => 89000,
-                'image' => 'assets/images/offers/offer-speaker-jbl.jpg',
-                'alt' => 'JBL premium bluetooth speaker',
-            ],
-        ],
-        [
-            'left' => [
-                'title' => 'Samsung 4K QLED Smart TV',
-                'price' => 189000,
-                'old_price' => 225000,
-                'image' => 'assets/images/offers/offer-smart-tv.jpg',
-                'alt' => 'Samsung 4K QLED smart television',
-            ],
-            'right' => [
-                'title' => 'Smart Air Purifier Pro',
-                'price' => 42000,
-                'old_price' => 52000,
-                'image' => 'assets/images/offers/offer-air-purifier.jpg',
-                'alt' => 'Smart air purifier for home',
-            ],
-        ],
-    ];
-@endphp
 <section
     id="deals"
     class="home-section bg-white deals-showcase special-offers"
     x-data="{
         activeSlide: 0,
-        totalSlides: {{ count($dealsSlides) }},
+        totalSlides: {{ count($specialOffersSlides) }},
         timer: null,
         isPaused: false,
         init() { this.play(); },
@@ -123,7 +71,7 @@
             </div>
             <div class="deals-showcase-heading">
                 <h2 class="deals-showcase-title">Special Offers</h2>
-                <p class="deals-showcase-subtitle">Premium earbuds, headphones, speakers and electronics accessories at exclusive prices.</p>
+                <p class="deals-showcase-subtitle">Barcode printers, scanners, CCTV cameras, laptops and business equipment from our latest catalog.</p>
             </div>
             <div class="deals-showcase-nav">
                 <button type="button" class="deals-nav-btn" aria-label="Previous deals" @click="prev()">
@@ -137,44 +85,40 @@
 
         <div class="deals-carousel" aria-live="polite">
             <div class="deals-carousel-track" :style="`transform: translateX(-${activeSlide * 100}%)`">
-                @foreach ($dealsSlides as $slide)
+                @foreach ($specialOffersSlides as $slide)
                     <div class="deals-slide">
                         <div class="deals-banner-grid">
-                            <a href="{{ route('shop') }}" class="deals-banner offer-banner">
-                                <img
-                                    src="{{ asset($slide['left']['image']) }}"
-                                    alt="{{ $slide['left']['alt'] }}"
-                                    class="deals-banner-bg offer-banner-image"
-                                    loading="lazy"
-                                >
-                                <div class="deals-banner-overlay offer-banner-overlay"></div>
-                                <div class="deals-banner-content offer-banner-content">
-                                    <h3 class="deals-banner-title">{{ $slide['left']['title'] }}</h3>
-                                    <div class="deals-banner-prices">
-                                        <span class="deals-banner-price">{{ Mbs::price($slide['left']['price']) }}</span>
-                                        <span class="deals-banner-price-old">{{ Mbs::price($slide['left']['old_price']) }}</span>
-                                    </div>
-                                    <span class="deals-banner-btn">Shop Now</span>
-                                </div>
-                            </a>
-
-                            <a href="{{ route('shop') }}" class="deals-banner deals-banner-large offer-banner offer-banner--large">
-                                <img
-                                    src="{{ asset($slide['right']['image']) }}"
-                                    alt="{{ $slide['right']['alt'] }}"
-                                    class="deals-banner-bg offer-banner-image"
-                                    loading="lazy"
-                                >
-                                <div class="deals-banner-overlay offer-banner-overlay"></div>
-                                <div class="deals-banner-content offer-banner-content">
-                                    <h3 class="deals-banner-title">{{ $slide['right']['title'] }}</h3>
-                                    <div class="deals-banner-prices">
-                                        <span class="deals-banner-price">{{ Mbs::price($slide['right']['price']) }}</span>
-                                        <span class="deals-banner-price-old">{{ Mbs::price($slide['right']['old_price']) }}</span>
-                                    </div>
-                                    <span class="deals-banner-btn">Shop Now</span>
-                                </div>
-                            </a>
+                            @foreach (['left' => '', 'right' => ' deals-banner-large offer-banner--large'] as $side => $bannerClass)
+                                @if (! empty($slide[$side]))
+                                    @php $offer = $slide[$side]; @endphp
+                                    <a
+                                        href="{{ ! empty($offer['slug']) ? route('product.show', $offer['slug']) : route('shop') }}"
+                                        class="deals-banner offer-banner{{ $bannerClass }}"
+                                    >
+                                        <img
+                                            src="{{ Mbs::image($offer['image']) }}"
+                                            alt="{{ $offer['alt'] }}"
+                                            class="deals-banner-bg offer-banner-image"
+                                            loading="lazy"
+                                        >
+                                        <div class="deals-banner-overlay offer-banner-overlay"></div>
+                                        <div class="deals-banner-content offer-banner-content">
+                                            <h3 class="deals-banner-title">{{ $offer['title'] }}</h3>
+                                            <div class="deals-banner-prices">
+                                                @if (($offer['price'] ?? 0) > 0)
+                                                    <span class="deals-banner-price">{{ Mbs::price($offer['price']) }}</span>
+                                                    @if (($offer['old_price'] ?? 0) > ($offer['price'] ?? 0))
+                                                        <span class="deals-banner-price-old">{{ Mbs::price($offer['old_price']) }}</span>
+                                                    @endif
+                                                @else
+                                                    <span class="deals-banner-price">Contact for Price</span>
+                                                @endif
+                                            </div>
+                                            <span class="deals-banner-btn">Shop Now</span>
+                                        </div>
+                                    </a>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 @endforeach
@@ -189,11 +133,11 @@
         <div class="featured-collections-strip-inner">
             <aside class="featured-collections-promo-panel">
                 <h2 class="featured-collections-promo-title">Curated Collections</h2>
-                <p class="featured-collections-promo-desc">Premium product picks designed for every lifestyle.</p>
+                <p class="featured-collections-promo-desc">More picks from our catalog — printers, biometrics and POS gear not shown above.</p>
                 <a href="{{ route('shop') }}" class="featured-collections-promo-btn">Explore All</a>
             </aside>
             <div class="featured-collections-items">
-                @foreach ($featuredCollections as $collection)
+                @foreach (array_slice($featuredCollections, 0, 4) as $collection)
                     @php
                         $collectionUrl = ! empty($collection['slug'])
                             ? route('product.show', $collection['slug'])
@@ -223,7 +167,7 @@
 {{-- Shop By Category --}}
 <section class="home-section mbs-shop-category-section">
     <div class="mbs-container">
-        @include('components.section-header', ['title' => 'Premium Product Categories', 'subtitle' => 'Browse premium TVs, audio, smart home, gaming and accessories', 'viewAllHref' => route('categories')])
+        @include('components.section-header', ['title' => 'Premium Product Categories', 'subtitle' => 'Barcode printers, scanners, CCTV cameras and access control from our latest catalog', 'viewAllHref' => route('categories')])
         <div class="home-section-inner mbs-shop-category-grid">
             @foreach (array_slice($premiumCategories, 0, 4) as $category)
                 @include('components.shop-category-tile', ['category' => $category])
@@ -233,10 +177,10 @@
 </section>
 
 @include('components.product-grid-section', ['title' => 'Best Selling Products', 'subtitle' => 'Top picks loved by customers', 'products' => array_slice($bestSelling, 0, 4), 'viewAllHref' => route('shop'), 'bg' => 'bg-white'])
-@include('components.product-grid-section', ['title' => 'New Arrivals', 'subtitle' => 'Recently added to MyBestStore', 'products' => array_slice($newArrivals, 0, 4), 'viewAllHref' => route('new-arrivals'), 'bg' => 'bg-secondary'])
+@include('components.product-grid-section', ['title' => 'New Arrivals', 'subtitle' => 'Recently added to DigitalWares', 'products' => array_slice($newArrivals, 0, 4), 'viewAllHref' => route('new-arrivals'), 'bg' => 'bg-secondary'])
 
 {{-- Trust strip --}}
-<section class="trust-strip" aria-label="Why shop with MyBestStore">
+<section class="trust-strip" aria-label="Why shop with DigitalWares">
     <div class="mbs-container">
         <div class="trust-strip-grid">
             @php
@@ -299,7 +243,7 @@
     <div class="mbs-container">
         <header class="testimonials-header">
             <h2 class="testimonials-header-title">What Customers Say</h2>
-            <p class="testimonials-header-subtitle">Real feedback from happy MyBestStore shoppers across Pakistan.</p>
+            <p class="testimonials-header-subtitle">Real feedback from happy DigitalWares shoppers across Pakistan.</p>
         </header>
 
         <div

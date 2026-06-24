@@ -4,7 +4,7 @@
     use App\Support\OrderPresenter;
 @endphp
 
-@section('title', 'MyBestStore | Order Tracking')
+@section('title', 'DigitalWares | Order Tracking')
 
 @section('content')
 <section class="order-tracking-page">

@@ -43,13 +43,13 @@
     ];
 @endphp
 
-@section('title', 'MyBestStore | Checkout')
+@section('title', 'DigitalWares | Checkout')
 
 @section('content')
 <section class="checkout-shell">
     <div class="checkout-toolbar">
         <a href="{{ route('home') }}" class="checkout-toolbar-brand">
-            <img src="{{ asset('logo.png') }}" alt="MyBestStore" class="checkout-toolbar-logo">
+            <img src="{{ asset('logo.png') }}" alt="DigitalWares" class="checkout-toolbar-logo">
         </a>
         <a href="{{ route('cart') }}" class="checkout-toolbar-cart" aria-label="View cart">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -13,7 +13,7 @@ class StaticPageController extends Controller
     private const PAGES = [
         'terms-of-service' => [
             'title' => 'Terms Of Service',
-            'description' => 'Please read these terms carefully before using MyBestStore.pk.',
+            'description' => 'Please read these terms carefully before using DigitalWares.pk.',
         ],
         'privacy-policy' => [
             'title' => 'Privacy Policy',
@@ -29,7 +29,7 @@ class StaticPageController extends Controller
         ],
         'faq' => [
             'title' => 'FAQ',
-            'description' => 'Answers to common questions about shopping at MyBestStore.',
+            'description' => 'Answers to common questions about shopping at DigitalWares.',
         ],
         'about-us' => [
             'title' => 'About Us',
@@ -37,7 +37,7 @@ class StaticPageController extends Controller
         ],
         'our-story' => [
             'title' => 'Our Story',
-            'description' => 'How MyBestStore grew into a nationwide electronics retailer.',
+            'description' => 'How DigitalWares grew into a nationwide electronics retailer.',
         ],
         'product-guides' => [
             'title' => 'Product Guides',

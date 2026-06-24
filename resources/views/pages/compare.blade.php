@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @php use App\Support\Mbs; @endphp
 
-@section('title', 'MyBestStore | Compare Products')
+@section('title', 'DigitalWares | Compare Products')
 
 @section('content')
 @include('components.page-hero', [
@@ -47,7 +47,7 @@
                             <tr>
                                 <th scope="row">Brand</th>
                                 @foreach ($products as $product)
-                                    <td x-show="isCompared(@js($product['slug']))">{{ $product['brand'] ?? 'MyBestStore' }}</td>
+                                    <td x-show="isCompared(@js($product['slug']))">{{ $product['brand'] ?? 'DigitalWares' }}</td>
                                 @endforeach
                             </tr>
                             <tr>

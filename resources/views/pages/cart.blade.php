@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @php use App\Support\Mbs; @endphp
 
-@section('title', 'MyBestStore | Cart')
+@section('title', 'DigitalWares | Cart')
 
 @section('content')
 <section class="cart-hero">

@@ -4,7 +4,7 @@
     use App\Support\OrderPresenter;
 @endphp
 
-@section('title', 'MyBestStore | Order Success')
+@section('title', 'DigitalWares | Order Success')
 
 @section('content')
 <section class="order-success-page">

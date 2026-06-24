@@ -66,20 +66,20 @@
                         Thank you! You have subscribed successfully.
                     </p>
 
-                    <p class="newsletter-popup-note">No spam. Only the best MyBestStore offers.</p>
+                    <p class="newsletter-popup-note">No spam. Only the best DigitalWares offers.</p>
 
                     <div class="newsletter-popup-social">
-                        <a href="https://mybeststore.pk/" target="_blank" rel="noopener" class="newsletter-popup-social-link" aria-label="X (Twitter)">
+                        <a href="https://digitalwares.pk/" target="_blank" rel="noopener" class="newsletter-popup-social-link" aria-label="X (Twitter)">
                             <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                             </svg>
                         </a>
-                        <a href="https://mybeststore.pk/" target="_blank" rel="noopener" class="newsletter-popup-social-link" aria-label="Facebook">
+                        <a href="https://digitalwares.pk/" target="_blank" rel="noopener" class="newsletter-popup-social-link" aria-label="Facebook">
                             <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M14 8h2V5h-2c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h2.5L16 12h-3v-2c0-.6.4-1 1-1z"/>
                             </svg>
                         </a>
-                        <a href="https://mybeststore.pk/" target="_blank" rel="noopener" class="newsletter-popup-social-link" aria-label="Instagram">
+                        <a href="https://digitalwares.pk/" target="_blank" rel="noopener" class="newsletter-popup-social-link" aria-label="Instagram">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <rect x="4" y="4" width="16" height="16" rx="4" stroke-width="1.75"/>
                                 <circle cx="12" cy="12" r="3.5" stroke-width="1.75"/>

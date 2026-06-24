@@ -16,7 +16,7 @@
 </head>
 <body>
     <button class="no-print" onclick="window.print()">Print</button>
-    <h1>MyBestStore.pk</h1>
+    <h1>DigitalWares.pk</h1>
     <p class="muted">Invoice</p>
     <p><strong>Order:</strong> {{ $order->order_number }}<br>
     <strong>Date:</strong> {{ $order->created_at?->format('M j, Y') }}</p>

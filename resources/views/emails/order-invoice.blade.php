@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Invoice</title>
     <style>
-        body { margin: 0; padding: 0; background: #f5faff; font-family: "Segoe UI", Arial, sans-serif; color: #082b4f; }
+        body { margin: 0; padding: 0; background: #fffbf7; font-family: "Segoe UI", Arial, sans-serif; color: #0f172a; }
         .wrapper { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
-        .card { background: #ffffff; border: 1px solid #cfe3f8; border-radius: 12px; overflow: hidden; }
-        .header { padding: 24px; text-align: center; border-bottom: 1px solid #cfe3f8; background: #ffffff; }
+        .card { background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; overflow: hidden; }
+        .header { padding: 24px; text-align: center; border-bottom: 1px solid #fed7aa; background: #ffffff; }
         .header img { max-width: 180px; height: auto; }
         .body { padding: 24px; }
-        h1 { margin: 0 0 8px; font-size: 22px; color: #082b4f; }
-        p { margin: 0 0 12px; line-height: 1.6; color: #60758c; font-size: 14px; }
-        .meta { margin: 20px 0; padding: 16px; background: #eaf4ff; border: 1px solid #cfe3f8; border-radius: 8px; }
+        h1 { margin: 0 0 8px; font-size: 22px; color: #0f172a; }
+        p { margin: 0 0 12px; line-height: 1.6; color: #64748b; font-size: 14px; }
+        .meta { margin: 20px 0; padding: 16px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; }
         .meta-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 14px; }
-        .meta-row strong { color: #082b4f; }
+        .meta-row strong { color: #0f172a; }
         table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
-        th, td { padding: 10px 8px; border-bottom: 1px solid #eaf4ff; text-align: left; vertical-align: top; }
-        th { color: #082b4f; font-size: 13px; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #ffedd5; text-align: left; vertical-align: top; }
+        th { color: #0f172a; font-size: 13px; background: #fff7ed; }
         .product-cell { display: flex; gap: 10px; align-items: center; }
-        .product-cell img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid #cfe3f8; }
+        .product-cell img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid #fed7aa; }
         .totals { margin-top: 16px; padding-top: 8px; }
         .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
-        .totals-row--grand { margin-top: 8px; padding-top: 12px; border-top: 1px solid #cfe3f8; font-size: 16px; font-weight: 700; color: #005aa7; }
-        .address { margin-top: 20px; padding: 16px; background: #f5faff; border-radius: 8px; border: 1px solid #cfe3f8; }
-        .footer { padding: 20px 24px; text-align: center; background: #eaf4ff; border-top: 1px solid #cfe3f8; font-size: 13px; color: #60758c; }
+        .totals-row--grand { margin-top: 8px; padding-top: 12px; border-top: 1px solid #fed7aa; font-size: 16px; font-weight: 700; color: #f97316; }
+        .address { margin-top: 20px; padding: 16px; background: #fffbf7; border-radius: 8px; border: 1px solid #fed7aa; }
+        .footer { padding: 20px 24px; text-align: center; background: #fff7ed; border-top: 1px solid #fed7aa; font-size: 13px; color: #64748b; }
     </style>
 </head>
 <body>
@@ -36,7 +36,7 @@
 <div class="wrapper">
     <div class="card">
         <div class="header">
-            <img src="{{ asset('logo.png') }}" alt="MyBestStore.pk">
+            <img src="{{ asset('logo.png') }}" alt="{{ Mbs::storeLabel() }}">
         </div>
         <div class="body">
             <h1>Thank you for your order!</h1>
@@ -96,15 +96,15 @@
             </div>
 
             <div class="address">
-                <p style="margin-bottom:8px;color:#082b4f;font-weight:700;">Shipping Address</p>
+                <p style="margin-bottom:8px;color:#0f172a;font-weight:700;">Shipping Address</p>
                 <p style="margin:0;">{{ OrderPresenter::shippingAddress($order) }}</p>
                 <p style="margin-top:12px;">Email: {{ $order->customer_email }}<br>Phone: {{ $order->customer_phone }}</p>
             </div>
 
-            <p style="margin-top:20px;">If you have any questions about your order, contact us at <a href="{{ route('contact') }}" style="color:#005aa7;">MyBestStore Support</a>.</p>
+            <p style="margin-top:20px;">If you have any questions about your order, contact us at <a href="{{ route('contact') }}" style="color:#f97316;">{{ Mbs::storeName() }} Support</a>.</p>
         </div>
         <div class="footer">
-            Thank you for shopping with MyBestStore.pk
+            Thank you for shopping with {{ Mbs::storeLabel() }}
         </div>
     </div>
 </div>

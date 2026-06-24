@@ -5,8 +5,8 @@
 @section('content')
 <div class="cms-login-page">
     <div class="cms-login-hero">
-        <img src="{{ asset('logo.png') }}" alt="MyBestStore" class="cms-login-hero-logo">
-        <h1>MyBestStore Admin</h1>
+        <img src="{{ asset('logo.png') }}" alt="DigitalWares" class="cms-login-hero-logo">
+        <h1>DigitalWares Admin</h1>
         <p>Manage your ecommerce store — products, orders, content and customers from one place.</p>
         <ul class="cms-login-features">
             <li>Dashboard with store overview</li>
@@ -27,7 +27,7 @@
 
             <label>
                 Email address
-                <input type="email" name="email" value="{{ old('email') }}" required autofocus placeholder="admin@mybeststore.pk">
+                <input type="email" name="email" value="{{ old('email') }}" required autofocus placeholder="admin@digitalwares.pk">
             </label>
             <label>
                 Password

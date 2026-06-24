@@ -1,0 +1,6 @@
+ALTER TABLE Customers
+    ADD COLUMN name VARCHAR(120) NULL AFTER id,
+    ADD COLUMN phone VARCHAR(30) NULL AFTER email;
+
+ALTER TABLE Customers
+    ADD COLUMN remember_token VARCHAR(100) NULL AFTER password;

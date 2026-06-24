@@ -115,13 +115,28 @@ class DispatchController extends Controller
             return back()->withInput()->with('error', 'Please select a valid courier.');
         }
 
-        DispatchWorkflow::confirmDispatch($order, $validated['courier_key'], $validated['tracking_number']);
+        $trackingNumber = trim($validated['tracking_number']);
+
+        DispatchWorkflow::confirmDispatch($order, $validated['courier_key'], $trackingNumber);
 
         StoreNotifier::orderDispatched($order->fresh(['items.product']));
 
         return redirect()
             ->route('cms.dispatch.queue', ['filter' => 'dispatched'])
-            ->with('success', 'Order '.$order->order_number.' dispatched successfully.');
+            ->with('success', 'Order '.$order->order_number.' dispatched with tracking '.$trackingNumber.'.');
+    }
+
+    public function barcodeSvg(Request $request): \Illuminate\Http\Response
+    {
+        $code = trim((string) $request->query('code', ''));
+
+        abort_if($code === '' || strlen($code) > 120, 404);
+
+        return response(
+            app(\App\Services\BarcodeService::class)->barcodeSvg($code, 48, 2),
+            200,
+            ['Content-Type' => 'image/svg+xml']
+        );
     }
 
     private function findOrder(int $id): Order

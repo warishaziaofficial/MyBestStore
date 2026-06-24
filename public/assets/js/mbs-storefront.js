@@ -453,6 +453,9 @@ document.addEventListener('alpine:init', () => {
                 this.authSuccess = data.message;
                 form.reset();
                 window.showToast(data.message, 'success');
+                if (window.MbsChatwoot) {
+                    window.MbsChatwoot.identifyUser(data.customer);
+                }
                 setTimeout(() => this.closeAuth(), 500);
             } catch (error) {
                 this.authError = error.message || 'Sign in failed. Please try again.';
@@ -530,6 +533,9 @@ document.addEventListener('alpine:init', () => {
                 this.authSuccess = data.message;
                 form.reset();
                 window.showToast(data.message, 'success');
+                if (window.MbsChatwoot) {
+                    window.MbsChatwoot.identifyUser(data.customer);
+                }
                 setTimeout(() => this.closeAuth(), 500);
             } catch (error) {
                 this.authError = error.message || 'Account could not be created.';
@@ -592,6 +598,9 @@ document.addEventListener('alpine:init', () => {
                 this.customer = null;
                 this.authSuccess = data.message;
                 window.showToast(data.message, 'success');
+                if (window.MbsChatwoot) {
+                    window.MbsChatwoot.resetUser();
+                }
             } catch (error) {
                 this.authError = error.message || 'Could not sign out.';
             }

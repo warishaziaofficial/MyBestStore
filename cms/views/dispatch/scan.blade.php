@@ -3,15 +3,18 @@
 @section('title', 'Scan Items')
 
 @section('page_heading')
-    <div class="dp-page-head">
-        <a href="{{ route('cms.dispatch.queue') }}" class="dp-back">← Back</a>
-        <div class="dp-page-head-row">
-            <h1 class="sf-page-title">Scan Items</h1>
-            <span @class(['dp-badge', 'dp-badge--pending' => $status !== 'ready', 'dp-badge--ready' => $status === 'ready'])>
-                {{ $status === 'ready' ? 'Ready' : 'Pending' }}
-            </span>
-        </div>
+<div class="sf-page-banner__title-block">
+    <div class="dp-page-head-row">
+        <h1 class="sf-page-title">Scan Items</h1>
+        <span @class(['dp-badge', 'dp-badge--pending' => $status !== 'ready', 'dp-badge--ready' => $status === 'ready'])>
+            {{ $status === 'ready' ? 'Ready' : 'Pending' }}
+        </span>
     </div>
+</div>
+@endsection
+
+@section('page_actions')
+<a href="{{ route('cms.dispatch.queue') }}" class="sf-btn sf-btn-outline sf-btn--sm">← Back</a>
 @endsection
 
 @section('content')
@@ -42,8 +45,8 @@
 </div>
 
 <div class="sf-card dp-card">
-    <h2 class="dp-card-title">QR Scanner</h2>
-    <p class="dp-help">Scan each product QR with a handheld scanner, use your device camera, or type the code below. Click <strong>Scan</strong> on a row to simulate a scan.</p>
+    <h2 class="dp-card-title">QR / Barcode Scanner</h2>
+    <p class="dp-help">Scan the <strong>QR or barcode from the table below</strong> (not the retail box UPC). Handheld scanners: scan then press Enter. You can also click <strong>Scan</strong> on a row.</p>
 
     <div class="dp-qr-camera-wrap">
         <button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="dp-camera-toggle">Use camera</button>
@@ -52,7 +55,7 @@
 
     <form id="dp-scan-form" class="dp-scan-form" data-url="{{ route('cms.dispatch.scan-barcode', $order->id) }}">
         @csrf
-        <input type="text" id="dp-barcode-input" class="cms-input dp-scan-input" placeholder="Scan or type QR code and press Scan..." autocomplete="off" autofocus>
+        <input type="text" id="dp-barcode-input" class="cms-input dp-scan-input" placeholder="Scan QR / barcode from table, or type code (e.g. MBS-PR-00020)…" autocomplete="off" autofocus>
         <button type="submit" class="cms-btn">Scan</button>
     </form>
     <div id="dp-scan-feedback" class="dp-scan-feedback" hidden></div>
@@ -66,6 +69,7 @@
                 <th>Product</th>
                 <th>SKU</th>
                 <th>QR Code</th>
+                <th>Barcode</th>
                 <th>Qty</th>
                 <th>Scanned</th>
                 <th></th>
@@ -78,14 +82,22 @@
                     $done = $scanned >= (int) $item->quantity;
                     $qrCode = ProductQr::code($item->product, $item->product_id);
                     $qrUrl = ProductQr::imageUrl($item->product, $item->product_id, 88);
+                    $barcodeCode = DispatchWorkflow::productBarcode($item->product, $item->product_id);
+                    $barcodeSvg = DispatchWorkflow::productBarcodeSvg($item->product, $item->product_id);
                 @endphp
-                <tr data-item-id="{{ $item->id }}" data-qr-code="{{ $qrCode }}" @class(['dp-item-row--done' => $done])>
+                <tr data-item-id="{{ $item->id }}" data-qr-code="{{ $qrCode }}" data-barcode-code="{{ $barcodeCode }}" @class(['dp-item-row--done' => $done])>
                     <td>{{ $item->product_name }}</td>
                     <td>{{ DispatchWorkflow::productSku($item->product, $item->product_id) }}</td>
                     <td class="dp-qr-cell">
                         @if ($qrUrl)
                             <img src="{{ $qrUrl }}" alt="QR {{ $qrCode }}" class="dp-qr-thumb" width="88" height="88" loading="lazy">
                             <code class="dp-qr-code">{{ $qrCode }}</code>
+                        @endif
+                    </td>
+                    <td class="dp-barcode-cell">
+                        @if ($barcodeSvg)
+                            <div class="dp-barcode-thumb">{!! $barcodeSvg !!}</div>
+                            <code class="dp-qr-code">{{ $barcodeCode }}</code>
                         @endif
                     </td>
                     <td>{{ $item->quantity }}</td>

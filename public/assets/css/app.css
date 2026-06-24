@@ -9010,7 +9010,7 @@ img {
 .mbs-toast {
     position: fixed;
     bottom: 1.5rem;
-    right: 1.5rem;
+    left: 1.5rem;
     z-index: 90;
     max-width: min(22rem, calc(100vw - 2rem));
     padding: 0.875rem 1.25rem;

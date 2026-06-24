@@ -46,6 +46,7 @@ Route::middleware('cms.auth')->group(function (): void {
     Route::post('/dispatch/{id}/items/{itemId}/scan', [DispatchController::class, 'scanItem'])->whereNumber(['id', 'itemId'])->name('cms.dispatch.scan-item');
     Route::get('/dispatch/{id}/ship', [DispatchController::class, 'ship'])->whereNumber('id')->name('cms.dispatch.ship');
     Route::post('/dispatch/{id}/ship', [DispatchController::class, 'confirmShip'])->whereNumber('id')->middleware('cms.role:admin,editor')->name('cms.dispatch.ship.confirm');
+    Route::get('/dispatch/barcode.svg', [DispatchController::class, 'barcodeSvg'])->name('cms.dispatch.barcode');
     Route::patch('/orders/{id}/quick-status', [OrdersController::class, 'quickStatus'])->whereNumber('id')->middleware('cms.role:admin,editor')->name('cms.orders.quick-status');
     Route::patch('/orders/{id}/quick-payment', [OrdersController::class, 'quickPaymentStatus'])->whereNumber('id')->middleware('cms.role:admin,editor')->name('cms.orders.quick-payment');
 
@@ -72,7 +73,6 @@ Route::middleware('cms.auth')->group(function (): void {
     Route::delete('/merchandising/{type}/{id}', [MerchandisingController::class, 'destroy'])->whereIn('type', ['featured', 'new-arrivals'])->whereNumber('id')->middleware('cms.role:admin,editor')->name('cms.merchandising.destroy');
 
     Route::get('/customers/password-reset', [CustomerPasswordController::class, 'index'])->middleware('cms.role:admin,editor')->name('cms.customers.password-reset');
-    Route::post('/customers/password-reset/send', [CustomerPasswordController::class, 'sendReset'])->middleware('cms.role:admin,editor')->name('cms.customers.password-reset.send');
     Route::post('/customers/password-reset/set', [CustomerPasswordController::class, 'setPassword'])->middleware('cms.role:admin,editor')->name('cms.customers.password-reset.set');
 
     Route::get('/settings/footer', [FooterSettingsController::class, 'edit'])->name('cms.settings.footer');

@@ -5,10 +5,23 @@
     $label = ucfirst(str_replace('_', ' ', $name));
     $isFull = in_array($fieldType, ['richtext', 'textarea', 'image', 'file'], true)
         || in_array($name, ['body', 'description', 'notes', 'message'], true);
+    if (! empty($forceCompactDesc) && $name === 'description') {
+        $isFull = false;
+    }
+    $isShort = ! $isFull && (
+        ! empty($forceShort)
+        || in_array($fieldType, ['number', 'email', 'tel', 'url', 'password', 'date', 'datetime-local', 'select', 'relation_select'], true)
+        || in_array($name, ['slug', 'badge', 'sku', 'price', 'cost_price', 'old_price', 'stock', 'sort_order', 'order', 'status', 'role', 'phone', 'zip', 'postal_code', 'city', 'state', 'country'], true)
+    );
     $fieldId = 'sf-field-'.$name;
 @endphp
 
-<div @class(['sf-form-field', 'sf-form-field--full' => $isFull])>
+<div @class([
+    'sf-form-field',
+    'sf-form-field--full' => $isFull,
+    'sf-form-field--short' => $isShort,
+    'sf-form-field--desc-compact' => ! empty($forceCompactDesc) && $name === 'description',
+])>
     @if ($fieldType === 'checkbox')
         <div class="sf-form-switch">
             <input type="hidden" name="{{ $name }}" value="0">
@@ -40,9 +53,9 @@
 
         <div class="sf-form-control">
             @if ($fieldType === 'richtext')
-                <textarea id="{{ $fieldId }}" class="cms-richtext sf-input sf-textarea" name="{{ $name }}" rows="12">{{ $value }}</textarea>
+                <textarea id="{{ $fieldId }}" @class(['cms-richtext', 'sf-input', 'sf-textarea', 'cms-richtext--compact' => ! empty($forceCompactDesc) && $name === 'description']) name="{{ $name }}" rows="{{ ! empty($forceCompactDesc) && $name === 'description' ? 3 : 8 }}">{{ $value }}</textarea>
             @elseif ($fieldType === 'textarea')
-                <textarea id="{{ $fieldId }}" class="sf-input sf-textarea" name="{{ $name }}" rows="{{ $name === 'body' ? 12 : 4 }}" @if($required) required @endif>{{ $value }}</textarea>
+                <textarea id="{{ $fieldId }}" class="sf-input sf-textarea" name="{{ $name }}" rows="{{ $name === 'body' ? 8 : 3 }}" @if($required) required @endif>{{ $value }}</textarea>
             @elseif ($fieldType === 'relation_select')
                 <select id="{{ $fieldId }}" class="sf-input sf-select" name="{{ $name }}" @if($required) required @endif>
                     <option value="">Select…</option>
@@ -63,7 +76,7 @@
                     </div>
                 @endif
                 <div class="sf-form-file-row">
-                    <input type="file" id="{{ $fieldId }}-file" class="sf-input sf-file" name="{{ $name }}_file" accept="image/*" @if($required && ! $value) required @endif>
+                    <input type="file" id="{{ $fieldId }}-file" class="sf-input sf-file" name="{{ $name }}_file" accept="{{ $name === 'logo' ? 'image/*,.svg' : 'image/*' }}" @if($required && ! $value) required @endif>
                 </div>
                 @unless ($field['upload_only'] ?? false)
                     <input

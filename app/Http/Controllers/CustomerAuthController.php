@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Services\CrmContactSync;
 use App\Services\OrderTrackingService;
+use App\Support\PasswordResetNotifier;
+use Cms\Models\Customer as CmsCustomer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules\Password;
 
 class CustomerAuthController extends Controller
 {
-    public function __construct(private readonly OrderTrackingService $tracking) {}
+    public function __construct(
+        private readonly OrderTrackingService $tracking,
+        private readonly CrmContactSync $crmSync,
+    ) {}
 
     public function login(Request $request): JsonResponse
     {
@@ -56,6 +63,8 @@ class CustomerAuthController extends Controller
             'password' => $validated['password'],
         ]);
 
+        $this->crmSync->syncSignup($customer);
+
         Auth::guard('customer')->login($customer);
 
         return response()->json([
@@ -71,16 +80,35 @@ class CustomerAuthController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        $customer = Customer::query()->where('email', $validated['email'])->first();
+        $email = strtolower(trim($validated['email']));
+        $name = null;
+        $exists = false;
 
-        if ($customer) {
-            // Placeholder until password reset mail flow is wired up.
+        if (Schema::hasTable('Customers')) {
+            $cmsCustomer = CmsCustomer::query()->where('email', $email)->first();
+
+            if ($cmsCustomer) {
+                $exists = true;
+                $name = $cmsCustomer->name;
+            }
+        }
+
+        if (! $exists) {
+            $customer = Customer::query()->where('email', $email)->first();
+
+            if ($customer) {
+                $exists = true;
+                $name = $customer->name;
+            }
+        }
+
+        if ($exists) {
+            PasswordResetNotifier::forgotPasswordRequested($email, $name);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'If this email exists, reset instructions will be sent.',
-            'placeholder' => true,
         ]);
     }
 

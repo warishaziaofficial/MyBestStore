@@ -94,6 +94,29 @@ class Mbs
         return $url . ($item['hash'] ?? '');
     }
 
+    public static function storefrontHref(?string $href): string
+    {
+        $href = trim((string) $href);
+
+        if ($href === '') {
+            return route('shop');
+        }
+
+        if (str_starts_with($href, 'http://') || str_starts_with($href, 'https://')) {
+            return $href;
+        }
+
+        if (str_starts_with($href, '/')) {
+            return url($href);
+        }
+
+        try {
+            return route($href);
+        } catch (\Throwable) {
+            return route('shop');
+        }
+    }
+
     public static function shopCategoryUrl(?string $slug): string
     {
         if (empty($slug)) {

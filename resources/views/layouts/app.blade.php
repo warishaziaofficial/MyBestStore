@@ -93,5 +93,6 @@
     @include('components.cart-drawer')
     @include('components.quick-view-modal')
     @include('components.newsletter-popup')
+    @include('components.chat-widget')
 </body>
 </html>

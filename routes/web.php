@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProductCatalogController;
 use App\Http\Controllers\Admin\ShippingRateController;
 use App\Http\Controllers\Admin\ShippingZoneController;
 use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerPasswordResetController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
@@ -69,6 +70,8 @@ Route::post('/compare/remove', [CompareController::class, 'remove'])->name('comp
 Route::post('/customer/login', [CustomerAuthController::class, 'login'])->name('customer.login');
 Route::post('/customer/register', [CustomerAuthController::class, 'register'])->name('customer.register');
 Route::post('/customer/forgot-password', [CustomerAuthController::class, 'forgotPassword'])->name('customer.forgot-password');
+Route::get('/reset-password/{token}', [CustomerPasswordResetController::class, 'show'])->name('customer.password.reset');
+Route::post('/reset-password/{token}', [CustomerPasswordResetController::class, 'update'])->name('customer.password.update');
 Route::post('/customer/track-order', [CustomerAuthController::class, 'trackOrder'])->name('customer.track-order');
 Route::post('/customer/logout', [CustomerAuthController::class, 'logout'])->name('customer.logout');
 

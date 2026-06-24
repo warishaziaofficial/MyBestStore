@@ -3,15 +3,21 @@
 @section('title', 'Dispatch Order')
 
 @section('page_heading')
-    <div class="dp-page-head">
-        <a href="{{ route('cms.dispatch.scan', $order->id) }}" class="dp-back">← Back</a>
-        <h1 class="sf-page-title">Dispatch Order</h1>
-    </div>
+<div class="sf-page-banner__title-block">
+    <h1 class="sf-page-title">Dispatch Order</h1>
+</div>
+@endsection
+
+@section('page_actions')
+<a href="{{ route('cms.dispatch.scan', $order->id) }}" class="sf-btn sf-btn-outline sf-btn--sm">← Back</a>
 @endsection
 
 @section('content')
 @php
+    use App\Services\BarcodeService;
     use Cms\Support\DispatchWorkflow;
+
+    $barcodeService = app(BarcodeService::class);
 @endphp
 
 <div class="dp-ship-banner">
@@ -79,11 +85,35 @@
 
             <p id="dp-tracking-summary" class="dp-tracking-summary" hidden></p>
 
+            <div id="dp-tracking-label" class="dp-tracking-label" hidden>
+                <p class="dp-tracking-label-title">Shipping label — QR encodes this exact tracking number</p>
+                <div class="dp-tracking-label-preview" id="dp-tracking-label-preview">
+                    <div class="dp-tracking-label-meta">
+                        <strong>{{ $order->order_number }}</strong>
+                        <span>{{ $order->customer_name }}</span>
+                        <span>{{ DispatchWorkflow::shippingAddressLine($order) }}</span>
+                    </div>
+                    <img id="dp-tracking-qr" class="dp-tracking-qr" alt="Tracking QR code" width="160" height="160">
+                    <img id="dp-tracking-barcode" class="dp-tracking-barcode-img" alt="Tracking barcode" hidden>
+                    <p id="dp-tracking-code-display" class="dp-tracking-code-display"></p>
+                </div>
+                <button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="dp-print-label">Print label</button>
+            </div>
+
             <button type="submit" class="cms-btn cms-btn--block" id="dp-confirm-dispatch" disabled>Confirm Dispatch</button>
-            <p class="dp-help dp-help--center">Select a courier and enter a parcel number to enable dispatch.</p>
+            <p class="dp-help dp-help--center">Select courier and tracking number. Customer receives email with tracking when you confirm.</p>
         </form>
     </div>
 </div>
 
+<script>
+window.cmsDispatchShip = {
+    orderNumber: @json($order->order_number),
+    customerName: @json($order->customer_name),
+    address: @json(DispatchWorkflow::shippingAddressLine($order)),
+    barcodeUrl: @json(route('cms.dispatch.barcode')),
+    qrBase: @json('https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='),
+};
+</script>
 <script src="{{ asset('assets/cms/js/dispatch-ship.js') }}?v={{ @filemtime(public_path('assets/cms/js/dispatch-ship.js')) ?: 1 }}" defer></script>
 @endsection

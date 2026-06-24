@@ -63,7 +63,22 @@ return [
         'password_reset' => [
             'name' => 'Customer — Password reset',
             'subject' => 'Reset your DigitalWares password',
-            'body' => '<p>Reset your password using this link:</p><p><a href="{{reset_url}}">{{reset_url}}</a></p>',
+            'body' => '<p>Hi {{customer_name}},</p><p>Reset your password using this link (valid for 60 minutes):</p><p><a href="{{reset_url}}">{{reset_url}}</a></p>',
+        ],
+        'admin_password_reset_request' => [
+            'name' => 'Admin — Password reset requested',
+            'subject' => 'Password reset requested — {{customer_email}}',
+            'body' => '<p>A customer requested a password reset on the storefront.</p><p><strong>Customer:</strong> {{customer_name}} ({{customer_email}})</p><p>Set a new password in CMS: <a href="{{cms_password_reset_url}}">{{cms_password_reset_url}}</a></p>',
+        ],
+        'customer_password_reset_by_admin' => [
+            'name' => 'Customer — Password reset by admin',
+            'subject' => 'Your DigitalWares password was reset',
+            'body' => '<p>Hi {{customer_name}},</p><p>An administrator reset your account password.</p><p><strong>New password:</strong> {{new_password}}</p><p>Sign in with this password, or choose your own using this link:</p><p><a href="{{reset_url}}">{{reset_url}}</a></p>',
+        ],
+        'admin_customer_password_reset' => [
+            'name' => 'Admin — Password reset completed',
+            'subject' => 'Password reset completed — {{customer_email}}',
+            'body' => '<p><strong>{{admin_name}}</strong> reset the storefront password for <strong>{{customer_email}}</strong>.</p><p>The customer was emailed their new password and a self-service reset link.</p>',
         ],
     ],
 

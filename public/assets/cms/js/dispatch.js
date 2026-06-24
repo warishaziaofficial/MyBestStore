@@ -108,6 +108,13 @@
         await submitCode(input.value);
     });
 
+    input.addEventListener('keydown', async (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            await submitCode(input.value);
+        }
+    });
+
     document.querySelectorAll('.dp-row-scan').forEach((button) => {
         button.addEventListener('click', async () => {
             try {

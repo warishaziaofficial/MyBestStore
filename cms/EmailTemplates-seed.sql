@@ -30,4 +30,13 @@ INSERT IGNORE INTO EmailTemplates (slug, name, subject, body, is_active) VALUES
  '<p>Order <strong>{{order_number}}</strong> for {{customer_name}} was cancelled.</p><p><a href="{{cms_order_url}}">View order</a></p>', 1),
 
 ('password_reset', 'Customer — Password reset', 'Reset your MyBestStore password',
- '<p>Reset your password using this link:</p><p><a href="{{reset_url}}">{{reset_url}}</a></p>', 1);
+ '<p>Hi {{customer_name}},</p><p>Reset your password using this link (valid for 60 minutes):</p><p><a href="{{reset_url}}">{{reset_url}}</a></p>', 1),
+
+('admin_password_reset_request', 'Admin — Password reset requested', 'Password reset requested — {{customer_email}}',
+ '<p>A customer requested a password reset on the storefront.</p><p><strong>Customer:</strong> {{customer_name}} ({{customer_email}})</p><p>Set a new password in CMS: <a href="{{cms_password_reset_url}}">{{cms_password_reset_url}}</a></p>', 1),
+
+('customer_password_reset_by_admin', 'Customer — Password reset by admin', 'Your MyBestStore password was reset',
+ '<p>Hi {{customer_name}},</p><p>An administrator reset your account password.</p><p><strong>New password:</strong> {{new_password}}</p><p>Sign in with this password, or choose your own using this link:</p><p><a href="{{reset_url}}">{{reset_url}}</a></p>', 1),
+
+('admin_customer_password_reset', 'Admin — Password reset completed', 'Password reset completed — {{customer_email}}',
+ '<p><strong>{{admin_name}}</strong> reset the storefront password for <strong>{{customer_email}}</strong>.</p><p>The customer was emailed their new password and a self-service reset link.</p>', 1);

@@ -1,36 +1,50 @@
-{{-- Homepage hero showcase — resources/views/pages/home.blade.php --}}
-@php
-    use App\Support\Mbs;
+{{-- Homepage hero — original layout; main carousel content from CMS when available --}}
+@php use App\Support\Mbs; @endphp
 
-    $heroMainSlides = [
+@php
+    $defaultHeroSlides = [
         [
-            'image' => 'assets/images/hero/hero-digital-hardware-product.jpg',
+            'image' => asset('assets/images/hero/hero-digital-hardware-product.jpg'),
             'alt' => 'Zebra ZT410 barcode label printer',
             'label' => 'Digitalwares Collection',
             'title' => 'Best Digital Hardware Store in Pakistan',
             'subtitle' => 'Point of sale, time attendance, security, networking and computer systems.',
             'button' => 'Shop Now',
-            'url' => route('shop'),
+            'href' => route('shop'),
         ],
         [
-            'image' => 'assets/images/hero/digitalwares-point-of-sales.jpg',
+            'image' => asset('assets/images/hero/digitalwares-point-of-sales.jpg'),
             'alt' => 'Point of sales systems and POS hardware',
             'label' => 'Point of Sales',
             'title' => 'Complete POS Solutions',
             'subtitle' => 'Barcode scanners, label printers, thermal printers, cash drawers and POS systems.',
             'button' => 'Explore POS',
-            'url' => Mbs::shopCategoryUrl('point-of-sales'),
+            'href' => Mbs::shopCategoryUrl('point-of-sales'),
         ],
         [
-            'image' => 'assets/images/hero/digitalwares-time-attendance.jpg',
+            'image' => asset('assets/images/hero/digitalwares-time-attendance.jpg'),
             'alt' => 'Time attendance and access control systems',
             'label' => 'Time Attendance',
             'title' => 'Time Attendance & Access Control',
             'subtitle' => 'Biometric devices, fingerprint readers, smart door locks and access terminals.',
             'button' => 'View Collection',
-            'url' => Mbs::shopCategoryUrl('time-attendance-access-control'),
+            'href' => Mbs::shopCategoryUrl('time-attendance-access-control'),
         ],
     ];
+
+    $cmsHeroSlides = collect($heroSlides ?? [])->map(function (array $slide): array {
+        return [
+            'image' => Mbs::image($slide['image'] ?? ''),
+            'alt' => $slide['title'] ?? 'Featured promotion',
+            'label' => $slide['eyebrow'] ?? 'Featured',
+            'title' => $slide['title'] ?? '',
+            'subtitle' => $slide['subtitle'] ?? '',
+            'button' => $slide['cta'] ?? 'Shop Now',
+            'href' => Mbs::storefrontHref($slide['cta_href'] ?? 'shop'),
+        ];
+    })->filter(fn (array $slide) => filled($slide['title']))->values()->all();
+
+    $heroMainSlides = $cmsHeroSlides !== [] ? $cmsHeroSlides : $defaultHeroSlides;
 @endphp
 
 <section class="hero-showcase" aria-label="Featured promotions">
@@ -40,7 +54,7 @@
                 @foreach ($heroMainSlides as $index => $slide)
                     <div class="hero-slide{{ $index === 0 ? ' active' : '' }}" data-hero-slide>
                         <img
-                            src="{{ asset($slide['image']) }}"
+                            src="{{ $slide['image'] }}"
                             alt="{{ $slide['alt'] }}"
                             class="hero-slide-bg{{ $index === 0 ? ' hero-slide-bg--banner' : '' }}"
                             width="1920"
@@ -52,7 +66,7 @@
                             <span class="hero-label">{{ $slide['label'] }}</span>
                             <h1 class="hero-title">{{ $slide['title'] }}</h1>
                             <p class="hero-subtitle">{{ $slide['subtitle'] }}</p>
-                            <a href="{{ $slide['url'] ?? route($slide['href'] ?? 'shop') }}" class="hero-btn">{{ $slide['button'] }}</a>
+                            <a href="{{ $slide['href'] }}" class="hero-btn">{{ $slide['button'] }}</a>
                         </div>
                     </div>
                 @endforeach

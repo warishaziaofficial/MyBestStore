@@ -82,7 +82,12 @@ class ResourceRegistry
                 'columns' => ['name', 'logo'],
                 'fields' => [
                     'name' => ['type' => 'text', 'required' => true, 'hint' => 'Used on products and the shop-by-brand section.'],
-                    'logo' => ['type' => 'text', 'required' => false, 'hint' => 'Path e.g. assets/images/brands/samsung.svg'],
+                    'logo' => [
+                        'type' => 'image',
+                        'required' => false,
+                        'upload_only' => true,
+                        'hint' => 'Brand logo for the shop-by-brand section. Upload PNG, JPG, WebP, or SVG.',
+                    ],
                     'sort_order' => ['type' => 'number', 'required' => false, 'hint' => 'Lower numbers appear first on homepage.'],
                 ],
             ],

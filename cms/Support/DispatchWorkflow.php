@@ -2,6 +2,7 @@
 
 namespace Cms\Support;
 
+use App\Services\BarcodeService;
 use Cms\Models\Order;
 use Cms\Models\OrderItem;
 use Cms\Models\Product;
@@ -138,7 +139,7 @@ class DispatchWorkflow
         foreach ($order->items as $item) {
             $matches = ProductQr::matchCodes($item->product, $item->product_id);
 
-            if (! in_array($code, $matches, true)) {
+            if (! ProductQr::scanMatches($code, $matches)) {
                 continue;
             }
 
@@ -164,10 +165,28 @@ class DispatchWorkflow
             ];
         }
 
+        $examples = $order->items
+            ->map(fn (OrderItem $item) => ProductQr::code($item->product, $item->product_id))
+            ->filter()
+            ->take(3)
+            ->implode(', ');
+
         return [
             'ok' => false,
-            'message' => 'No matching product found for QR code '.$code.'.',
+            'message' => 'No matching product for "'.$code.'". Scan the QR or barcode shown in the table'
+                .($examples !== '' ? ' (e.g. '.$examples.')' : '.'),
         ];
+    }
+
+    public static function productBarcodeSvg(?Product $product, ?int $productId = null, int $height = 36): string
+    {
+        $code = self::productBarcode($product, $productId);
+
+        if ($code === '') {
+            return '';
+        }
+
+        return app(BarcodeService::class)->barcodeSvg($code, $height, 1);
     }
 
     public static function scanItem(Order $order, OrderItem $item): array

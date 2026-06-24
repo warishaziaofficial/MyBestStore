@@ -1,38 +1,39 @@
 @php
     $selected = old('relations.'.$type, $selectedRelations[$type] ?? []);
+    $selected = array_map('intval', (array) $selected);
     $currentId = $item ? (int) data_get($item, 'id') : null;
     $pickerProducts = $allProducts->filter(fn ($product) => (int) $product->id !== $currentId)->values();
+    $productOptions = $pickerProducts->map(fn ($product) => [
+        'id' => (int) $product->id,
+        'name' => $product->name,
+    ])->values();
 @endphp
 
-<div class="sf-relation-picker" data-relation-picker>
+<div
+    class="sf-ms"
+    data-product-multiselect
+    data-field-name="relations[{{ $type }}]"
+    data-products='@json($productOptions)'
+    data-selected='@json(array_values($selected))'
+>
     <label class="sf-form-label">{{ $label }}</label>
 
     @if ($pickerProducts->isEmpty())
-        <p class="sf-form-empty">No other products yet. Save this product first, then add more products to set {{ strtolower($label) }}.</p>
+        <p class="sf-form-empty">No other products yet. Add more products first.</p>
     @else
-        <input
-            type="search"
-            class="sf-input sf-relation-search"
-            placeholder="Search products by name…"
-            autocomplete="off"
-            data-relation-search
-        >
-        <div class="sf-relation-list" data-relation-list>
-            @foreach ($pickerProducts as $product)
-                <label class="sf-relation-item" data-relation-item data-name="{{ strtolower($product->name) }}">
-                    <input
-                        type="checkbox"
-                        name="relations[{{ $type }}][]"
-                        value="{{ $product->id }}"
-                        @checked(in_array($product->id, $selected))
-                    >
-                    <span class="sf-relation-item-text">
-                        <strong>{{ $product->name }}</strong>
-                        <span>#{{ $product->id }}</span>
-                    </span>
-                </label>
-            @endforeach
+        <div class="sf-ms-field" data-ms-field tabindex="0" role="combobox" aria-expanded="false" aria-haspopup="listbox">
+            <div class="sf-ms-tags" data-ms-tags></div>
+            <input
+                type="text"
+                class="sf-ms-input"
+                data-ms-input
+                placeholder="Search and select products…"
+                autocomplete="off"
+                aria-autocomplete="list"
+            >
+            <span class="sf-ms-chevron" aria-hidden="true">▾</span>
         </div>
-        <p class="sf-form-hint">Search above, then tick the products you want. Click again to remove.</p>
+        <div class="sf-ms-menu" data-ms-menu hidden role="listbox"></div>
+        <div class="sf-ms-hidden" data-ms-hidden></div>
     @endif
 </div>

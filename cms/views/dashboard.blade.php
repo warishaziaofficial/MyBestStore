@@ -3,7 +3,14 @@
 @section('title', 'Dashboard')
 
 @section('page_heading')
-<h1 class="sf-page-title">Dashboard</h1>
+<div class="sf-page-banner__title-block">
+    <h1 class="sf-page-title">Dashboard</h1>
+    <p class="sf-page-subtitle">Overview of catalog, orders, revenue and quick shortcuts.</p>
+</div>
+@endsection
+
+@section('page_banner_extra')
+@include('cms::dashboard._shortcuts')
 @endsection
 
 @section('content')
@@ -68,23 +75,5 @@
         <li>Manage homepage content, blog, FAQs and media</li>
         <li>Connect social accounts and sync orders from Instagram, TikTok, Facebook and WhatsApp</li>
     </ul>
-</div>
-
-<div class="sf-panel">
-    <h2 style="margin:0 0 16px;font-size:1.1rem;font-weight:700;">Quick Access</h2>
-    <div class="sf-quick-links">
-        <a href="{{ route('cms.products.index') }}" class="sf-quick-link">Products</a>
-        <a href="{{ route('cms.orders.index') }}" class="sf-quick-link">Orders</a>
-        <a href="{{ route('cms.reports') }}" class="sf-quick-link">Reports</a>
-        <a href="{{ route('cms.merchandising.featured') }}" class="sf-quick-link">Featured Products</a>
-        <a href="{{ route('cms.merchandising.new-arrivals') }}" class="sf-quick-link">New Arrivals</a>
-        <a href="{{ route('cms.resource.index', 'hero-slides') }}" class="sf-quick-link">Hero Slides</a>
-        <a href="{{ route('cms.resource.index', 'blog-posts') }}" class="sf-quick-link">Blog</a>
-        <a href="{{ route('cms.resource.index', 'media') }}" class="sf-quick-link">Media Library</a>
-        <a href="{{ route('cms.resource.index', 'reviews') }}" class="sf-quick-link">Reviews</a>
-        <a href="{{ route('cms.resource.index', 'inquiries') }}" class="sf-quick-link">Inquiries</a>
-        <a href="{{ route('cms.settings.footer') }}" class="sf-quick-link">Footer Settings</a>
-        <a href="{{ route('cms.social.index') }}" class="sf-quick-link">Social Integration</a>
-    </div>
 </div>
 @endsection

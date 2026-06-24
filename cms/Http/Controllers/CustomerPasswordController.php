@@ -2,16 +2,14 @@
 
 namespace Cms\Http\Controllers;
 
-use App\Support\CustomerPasswordReset;
-use App\Support\EmailTemplateMailer;
+use App\Models\Customer as StorefrontCustomer;
+use App\Support\PasswordResetNotifier;
 use Cms\Models\Customer;
-use Cms\Models\EmailTemplate;
 use Cms\Support\CmsAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class CustomerPasswordController extends Controller
@@ -22,36 +20,9 @@ class CustomerPasswordController extends Controller
 
         return view('cms::customers.password-reset', [
             'customers' => Schema::hasTable('Customers')
-                ? Customer::query()->orderBy('email')->get(['id', 'email', 'created_at'])
+                ? Customer::query()->orderBy('email')->get(['id', 'email', 'name', 'created_at'])
                 : collect(),
         ]);
-    }
-
-    public function sendReset(Request $request): RedirectResponse
-    {
-        $this->requireEditor();
-
-        $data = $request->validate([
-            'customer_id' => ['required', 'integer', 'exists:Customers,id'],
-        ]);
-
-        $customer = Customer::query()->findOrFail($data['customer_id']);
-        $token = CustomerPasswordReset::createToken($customer);
-        $resetUrl = URL::route('customer.password.reset', ['token' => $token]);
-
-        $template = Schema::hasTable('EmailTemplates')
-            ? EmailTemplate::query()->where('slug', 'password_reset')->where('is_active', true)->first()
-            : null;
-
-        EmailTemplateMailer::sendOrFallback(
-            'password_reset',
-            $customer->email,
-            ['reset_url' => $resetUrl],
-            $template?->subject ?? 'Reset your MyBestStore password',
-            $template?->body ?? "Reset your password using this link:\n{{reset_url}}"
-        );
-
-        return redirect()->route('cms.customers.password-reset')->with('success', 'Password reset email sent to '.$customer->email);
     }
 
     public function setPassword(Request $request): RedirectResponse
@@ -64,9 +35,30 @@ class CustomerPasswordController extends Controller
         ]);
 
         $customer = Customer::query()->findOrFail($data['customer_id']);
-        $customer->update(['password' => Hash::make($data['password'])]);
+        $plainPassword = $data['password'];
+        $hashed = Hash::make($plainPassword);
 
-        return redirect()->route('cms.customers.password-reset')->with('success', 'Password updated for '.$customer->email);
+        $customer->update(['password' => $hashed]);
+
+        $storeCustomer = StorefrontCustomer::query()->where('email', $customer->email)->first();
+
+        if ($storeCustomer) {
+            $storeCustomer->password = $plainPassword;
+            $storeCustomer->save();
+        }
+
+        $admin = CmsAuth::user();
+
+        PasswordResetNotifier::adminSetPassword(
+            $customer->email,
+            $plainPassword,
+            $admin?->username,
+        );
+
+        return redirect()->route('cms.customers.password-reset')->with(
+            'success',
+            'Password updated for '.$customer->email.'. The customer and admin were notified by email.',
+        );
     }
 
     private function requireEditor(): void

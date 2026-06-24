@@ -76,6 +76,7 @@ class ResourceController extends Controller
                 'allProducts' => \Cms\Models\Product::query()->orderBy('name')->get(['id', 'name']),
                 'productRelations' => ProductRelationSync::TYPES,
                 'selectedRelations' => array_fill_keys(array_keys(ProductRelationSync::TYPES), []),
+                'galleryImages' => collect(),
             ]);
         }
 
@@ -154,9 +155,10 @@ class ResourceController extends Controller
 
         if ($model === \Cms\Models\Product::class) {
             ProductRelationSync::sync((int) $created->id, $request->input('relations', []));
+            \Cms\Support\ProductGallerySync::sync((int) $created->id, $request);
         }
 
-        return redirect()->route('cms.resource.index', $entity)->with('success', $config['singular'].' created.');
+        return redirect()->route('cms.products.index')->with('success', $config['singular'].' created.');
     }
 
     public function edit(string $entity, string $id): View
@@ -177,6 +179,7 @@ class ResourceController extends Controller
                 'allProducts' => \Cms\Models\Product::query()->where('id', '!=', $item->id)->orderBy('name')->get(['id', 'name']),
                 'productRelations' => ProductRelationSync::TYPES,
                 'selectedRelations' => ProductRelationSync::groupedForProduct((int) $item->id),
+                'galleryImages' => \Cms\Support\ProductGallerySync::forProduct((int) $item->id),
             ]);
         }
 
@@ -231,9 +234,11 @@ class ResourceController extends Controller
             if ($previousStock !== null && array_key_exists('stock', $data)) {
                 StockAlertNotifier::afterStockChange((int) $item->id, $previousStock);
             }
+
+            \Cms\Support\ProductGallerySync::sync((int) $item->id, $request);
         }
 
-        return redirect()->route('cms.resource.index', $entity)->with('success', $config['singular'].' updated.');
+        return redirect()->route('cms.products.index')->with('success', $config['singular'].' updated.');
     }
 
     public function destroy(string $entity, string $id): RedirectResponse
@@ -327,7 +332,9 @@ class ResourceController extends Controller
 
             if ($fieldType === 'image') {
                 $rules[$name] = $isUpdate ? ['nullable', 'string', 'max:500'] : ['nullable', 'string', 'max:500'];
-                $rules[$name.'_file'] = ['nullable', 'file', 'image', 'max:5120'];
+                $rules[$name.'_file'] = $name === 'logo'
+                    ? ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:5120']
+                    : ['nullable', 'file', 'image', 'max:5120'];
 
                 if ($field['required'] && ! $isUpdate) {
                     $rules[$name][] = 'required_without:'.$name.'_file';
@@ -402,6 +409,8 @@ class ResourceController extends Controller
                         'alt_text' => $request->input($name.'_alt') ?: $request->input('image_alt'),
                     ]));
                     $data[$name] = $stored['path'];
+                } elseif ($request->boolean('remove_image')) {
+                    $data[$name] = '';
                 } elseif (empty($data[$name] ?? null) && $item) {
                     $data[$name] = $item->{$name};
                 }

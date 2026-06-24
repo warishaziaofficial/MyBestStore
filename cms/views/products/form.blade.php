@@ -3,84 +3,124 @@
 @section('title', ($item ? 'Edit' : 'Create').' '.$config['singular'])
 
 @section('page_heading')
-<div class="sf-page-head">
-    <div>
-        <h1 class="sf-page-title">📦 {{ $item ? 'Edit' : 'Add' }} Product</h1>
-        <p class="sf-page-subtitle">Pricing, inventory, images and storefront recommendations.</p>
-    </div>
-    <a href="{{ route('cms.products.index') }}" class="sf-btn sf-btn-outline">← Back to products</a>
+<div class="sf-page-banner__title-block">
+    <h1 class="sf-page-title">{{ $item ? 'Edit' : 'Add' }} Product</h1>
+    <p class="sf-page-subtitle">Pricing, inventory, images and storefront recommendations.</p>
 </div>
+@endsection
+
+@section('page_actions')
+<a href="{{ route('cms.products.index') }}" class="sf-btn sf-btn-outline sf-btn--sm">← Back</a>
 @endsection
 
 @section('content')
 @php
-    $hasUpload = collect($config['fields'])->contains(fn ($field) => in_array($field['type'] ?? '', ['image', 'file'], true));
     $formOptions = $formOptions ?? [];
-
-    $groups = [
-        'Basic details' => ['name', 'slug', 'category', 'sub_category', 'brand', 'badge'],
-        'Pricing & inventory' => ['price', 'cost_price', 'old_price', 'stock'],
-        'Description' => ['description'],
-        'Visibility' => ['featured'],
-    ];
+    $basicFields = ['name', 'slug', 'category', 'sub_category', 'brand', 'badge'];
+    $pricingFields = ['price', 'cost_price', 'old_price', 'stock'];
 @endphp
 
-<div class="sf-form-layout">
+<div class="sf-form-layout sf-form-layout--product sf-form-layout--standard">
     <form
         method="POST"
         action="{{ $item ? route('cms.resource.update', [$entity, data_get($item, $config['key'] ?? 'id')]) : route('cms.resource.store', $entity) }}"
         class="sf-form"
-        @if ($hasUpload) enctype="multipart/form-data" @endif
+        enctype="multipart/form-data"
     >
         @csrf
         @if ($item)
             @method('PUT')
         @endif
 
-        @foreach ($groups as $title => $fieldNames)
-            @php
-                $sectionFields = collect($fieldNames)
-                    ->filter(fn ($name) => isset($config['fields'][$name]))
-                    ->mapWithKeys(fn ($name) => [$name => $config['fields'][$name]])
-                    ->all();
-            @endphp
-            @if ($sectionFields !== [])
-                <section class="sf-panel sf-form-section">
+        <div class="sf-form-columns sf-product-columns">
+            <div class="sf-form-columns__main sf-product-columns__main">
+                <section class="sf-panel sf-form-section sf-product-card">
                     <header class="sf-form-section-head">
-                        <h2>{{ $title }}</h2>
+                        <h2>Basic details</h2>
                     </header>
-                    <div class="sf-form-grid">
-                        @foreach ($sectionFields as $name => $field)
+                    <div class="sf-form-grid sf-form-grid--product-basic">
+                        @foreach ($basicFields as $name)
+                            @if (! isset($config['fields'][$name]))
+                                @continue
+                            @endif
+                            @php $field = $config['fields'][$name]; @endphp
                             @if ($item && ($field['edit'] ?? true) === false)
                                 @continue
                             @endif
-                            @include('cms::crud._field', ['name' => $name, 'field' => $field, 'item' => $item, 'formOptions' => $formOptions])
+                            @include('cms::crud._field', ['name' => $name, 'field' => $field, 'item' => $item, 'formOptions' => $formOptions, 'forceShort' => true])
                         @endforeach
                     </div>
                 </section>
-            @endif
-        @endforeach
 
-        <section class="sf-panel sf-form-section">
-            <header class="sf-form-section-head">
-                <h2>Main image</h2>
-                <p class="sf-form-section-desc">Cover photo used on shop, cart and search results. For extra photos (gallery thumbnails on the product page), use <a href="{{ route('cms.resource.index', 'product-images') }}">Catalog → Product Gallery</a> after saving this product.</p>
-            </header>
-            <div class="sf-form-grid">
-                @foreach (['image', 'image_alt'] as $name)
-                    @if (isset($config['fields'][$name]))
-                        @include('cms::crud._field', ['name' => $name, 'field' => $config['fields'][$name], 'item' => $item, 'formOptions' => $formOptions])
-                    @endif
-                @endforeach
+                @if (isset($config['fields']['description']))
+                    <section class="sf-panel sf-form-section sf-product-card">
+                        <header class="sf-form-section-head">
+                            <h2>Description</h2>
+                        </header>
+                        <div class="sf-form-grid sf-form-grid--product-desc">
+                            @include('cms::crud._field', [
+                                'name' => 'description',
+                                'field' => $config['fields']['description'],
+                                'item' => $item,
+                                'formOptions' => $formOptions,
+                                'forceCompactDesc' => true,
+                            ])
+                        </div>
+                    </section>
+                @endif
+
+                <section class="sf-panel sf-form-section sf-product-card">
+                    <header class="sf-form-section-head">
+                        <h2>Pricing &amp; inventory</h2>
+                    </header>
+                    <div class="sf-pricing-layout">
+                        @foreach ($pricingFields as $name)
+                            @if (! isset($config['fields'][$name]))
+                                @continue
+                            @endif
+                            @php $field = $config['fields'][$name]; @endphp
+                            @if ($item && ($field['edit'] ?? true) === false)
+                                @continue
+                            @endif
+                            @include('cms::crud._field', ['name' => $name, 'field' => $field, 'item' => $item, 'formOptions' => $formOptions, 'forceShort' => true])
+                        @endforeach
+                    </div>
+                </section>
             </div>
-        </section>
 
-        <section class="sf-panel sf-form-section">
+            <aside class="sf-form-columns__side sf-product-columns__side">
+                <section class="sf-panel sf-form-section sf-product-card">
+                    <header class="sf-form-section-head">
+                        <h2>Product image</h2>
+                    </header>
+                    <div class="sf-form-grid sf-form-grid--product-media">
+                        @include('cms::products._image-upload', ['config' => $config, 'item' => $item, 'asPanel' => true])
+                    </div>
+                </section>
+
+                <section class="sf-panel sf-form-section sf-product-card">
+                    <header class="sf-form-section-head">
+                        <h2>Gallery images</h2>
+                    </header>
+                    <div class="sf-form-grid sf-form-grid--product-media">
+                        @include('cms::products._gallery-manager', ['galleryImages' => $galleryImages ?? collect(), 'hideTitle' => true])
+                    </div>
+                </section>
+
+                @if (isset($config['fields']['featured']))
+                    <section class="sf-panel sf-form-section sf-product-card sf-product-card--featured">
+                        @include('cms::products._visibility-bar', ['compact' => true])
+                    </section>
+                @endif
+            </aside>
+        </div>
+
+        <section class="sf-panel sf-form-section sf-product-card sf-product-card--wide">
             <header class="sf-form-section-head">
                 <h2>Product recommendations</h2>
-                <p class="sf-form-section-desc">Pick other products to show on this product’s storefront page — search and tick each one (not typing names manually).</p>
+                <p class="sf-form-section-desc">Search and pick related products for the storefront page.</p>
             </header>
-            <div class="sf-form-grid sf-form-grid--relations">
+            <div class="sf-form-grid sf-form-grid--relations-compact">
                 @foreach ($productRelations as $type => $label)
                     @include('cms::products._relation-picker', [
                         'type' => $type,
@@ -93,9 +133,9 @@
             </div>
         </section>
 
-        <div class="sf-form-actions">
-            <a href="{{ route('cms.products.index') }}" class="sf-btn sf-btn-outline">Cancel</a>
-            <button type="submit" class="sf-btn sf-btn-primary">
+        <div class="sf-form-actions sf-form-actions--product">
+            <a href="{{ route('cms.products.index') }}" class="sf-btn sf-btn-outline sf-btn--sm">Cancel</a>
+            <button type="submit" class="sf-btn sf-btn-primary sf-btn--sm">
                 {{ $item ? 'Save product' : 'Create product' }}
             </button>
         </div>
@@ -106,28 +146,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@4.2.27/build/jodit.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jodit@4.2.27/build/jodit.min.js"></script>
     <script>
-        document.querySelectorAll('.cms-richtext').forEach(function (el) {
+        document.querySelectorAll('.cms-richtext--compact').forEach(function (el) {
             new Jodit(el, {
-                height: 360,
+                height: 88,
+                minHeight: 72,
                 toolbarAdaptive: false,
-                buttons: 'bold,italic,underline,|,ul,ol,|,link,table,|,undo,redo,|,source',
+                toolbarSticky: false,
+                showCharsCounter: false,
+                showWordsCounter: false,
+                showXPathInStatusbar: false,
+                buttons: 'bold,italic,underline,|,link,|,undo,redo',
             });
         });
     </script>
 @endif
 
-<script>
-document.querySelectorAll('[data-relation-search]').forEach(function (input) {
-    var picker = input.closest('[data-relation-picker]');
-    var items = picker.querySelectorAll('[data-relation-item]');
-
-    input.addEventListener('input', function () {
-        var query = input.value.trim().toLowerCase();
-        items.forEach(function (item) {
-            var name = item.getAttribute('data-name') || '';
-            item.hidden = query !== '' && !name.includes(query);
-        });
-    });
-});
-</script>
+<script src="{{ asset('assets/cms/js/product-form.js') }}?v={{ @filemtime(public_path('assets/cms/js/product-form.js')) ?: 1 }}" defer></script>
 @endsection
